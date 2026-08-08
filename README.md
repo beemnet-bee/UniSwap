@@ -13,7 +13,7 @@ Built with **Next.js 16** (App Router), **TypeScript**, **Tailwind CSS 4**, **sh
 | `/features` | 8 feature cards + comparison table |
 | `/impact` | 10,000 lbs hero stat + 4-stat grid + 3-pillar "why it matters" |
 | `/how-it-works` | 4-step vertical timeline + "before you start" checklist |
-| `/team` | 2 co-founder cards + open roles |
+| `/team` | 3 team members (Suong Tran, Suneha Shelke, Nikhil Shelke) + open roles |
 | `/faq` | 6-question accordion + contact options |
 | `/partner` | Proposal form (7 fields) + benefits + 4-week rollout timeline |
 
@@ -21,13 +21,27 @@ Built with **Next.js 16** (App Router), **TypeScript**, **Tailwind CSS 4**, **sh
 
 ```bash
 # Install dependencies
-bun install
+bun install   # or: npm install
 
 # Run the dev server
-bun run dev
+bun run dev   # or: npm run dev
 
 # Open http://localhost:3000
 ```
+
+## Deploying to Vercel
+
+This project is configured for Vercel out of the box:
+
+1. Push your code to GitHub
+2. Import the repo at [vercel.com/new](https://vercel.com/new)
+3. Vercel auto-detects Next.js — no extra config needed
+4. Click **Deploy**
+
+**Build command:** `next build` (already set in `package.json`)  
+**Output directory:** `.next` (handled automatically by Vercel)
+
+> **Note:** Do NOT use `output: "standalone"` in `next.config.ts` when deploying to Vercel. Vercel handles the output natively. The standalone mode is only for self-hosting (Docker/Node server).
 
 ## Tech Stack
 
