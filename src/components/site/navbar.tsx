@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   motion,
@@ -10,7 +11,7 @@ import {
   useMotionValueEvent,
   useSpring,
 } from 'framer-motion'
-import { Menu, X, Moon, Sun, Recycle, ArrowRight, Home } from 'lucide-react'
+import { Menu, X, Moon, Sun, ArrowRight, Home } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -82,11 +83,28 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-2.5">
             <motion.span
-              whileHover={{ rotate: -15, scale: 1.05 }}
+              whileHover={{ rotate: -8, scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-              className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary via-[#1B5F7A] to-[#D84241] text-white shadow-md"
+              className="relative h-9 w-9 shrink-0"
             >
-              <Recycle className="h-5 w-5" strokeWidth={1.75} />
+              {/* Teal icon for light mode */}
+              <Image
+                src="/uniswap-icon.svg"
+                alt="UniSWAP"
+                fill
+                className="object-contain dark:hidden"
+                sizes="36px"
+                priority
+              />
+              {/* White icon for dark mode */}
+              <Image
+                src="/uniswap-icon-white.svg"
+                alt="UniSWAP"
+                fill
+                className="hidden object-contain dark:block"
+                sizes="36px"
+                priority
+              />
             </motion.span>
             <span className="text-base font-bold tracking-tight sm:text-lg">
               Uni<span className="uniswap-gradient-text">SWAP</span>
@@ -190,8 +208,21 @@ export function Navbar() {
               {/* top bar */}
               <div className="flex h-16 items-center justify-between border-b border-border px-5">
                 <Link href="/" className="flex items-center gap-2.5">
-                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary via-[#1B5F7A] to-[#D84241] text-white shadow-md">
-                    <Recycle className="h-5 w-5" />
+                  <span className="relative h-9 w-9 shrink-0">
+                    <Image
+                      src="/uniswap-icon.svg"
+                      alt="UniSWAP"
+                      fill
+                      className="object-contain dark:hidden"
+                      sizes="36px"
+                    />
+                    <Image
+                      src="/uniswap-icon-white.svg"
+                      alt="UniSWAP"
+                      fill
+                      className="hidden object-contain dark:block"
+                      sizes="36px"
+                    />
                   </span>
                   <span className="text-lg font-bold tracking-tight">
                     Uni<span className="uniswap-gradient-text">SWAP</span>

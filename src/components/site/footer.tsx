@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
-  Recycle,
   Mail,
   MapPin,
   Instagram,
@@ -65,11 +65,24 @@ export function Footer() {
           <div className="lg:col-span-5">
             <Link href="#top" className="group inline-flex items-center gap-2.5">
               <motion.span
-                whileHover={{ rotate: -15 }}
+                whileHover={{ rotate: -8 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-                className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary via-[#1B5F7A] to-[#D84241] text-white shadow-md"
+                className="relative h-10 w-10 shrink-0"
               >
-                <Recycle className="h-5 w-5" />
+                <Image
+                  src="/uniswap-icon.svg"
+                  alt="UniSWAP"
+                  fill
+                  className="object-contain dark:hidden"
+                  sizes="40px"
+                />
+                <Image
+                  src="/uniswap-icon-white.svg"
+                  alt="UniSWAP"
+                  fill
+                  className="hidden object-contain dark:block"
+                  sizes="40px"
+                />
               </motion.span>
               <span className="text-xl font-bold tracking-tight">
                 Uni<span className="uniswap-gradient-text">SWAP</span>

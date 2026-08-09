@@ -1,8 +1,8 @@
 'use client'
 
 import * as React from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Recycle } from 'lucide-react'
 
 /**
  * Full-screen splash that shows the UniSWAP logo + tagline,
@@ -45,8 +45,23 @@ export function SplashScreen() {
             className="relative"
           >
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-primary via-[#67B0C3] to-[#D84241] opacity-30 blur-2xl" />
-            <div className="relative grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-primary via-[#1B5F7A] to-[#D84241] text-white shadow-2xl">
-              <Recycle className="h-10 w-10" strokeWidth={1.75} />
+            <div className="relative h-20 w-20">
+              <Image
+                src="/uniswap-icon.svg"
+                alt="UniSWAP"
+                fill
+                className="object-contain dark:hidden"
+                sizes="80px"
+                priority
+              />
+              <Image
+                src="/uniswap-icon-white.svg"
+                alt="UniSWAP"
+                fill
+                className="hidden object-contain dark:block"
+                sizes="80px"
+                priority
+              />
             </div>
           </motion.div>
 
