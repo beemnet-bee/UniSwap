@@ -47,18 +47,10 @@ export function SplashScreen() {
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-primary via-[#67B0C3] to-[#D84241] opacity-30 blur-2xl" />
             <div className="relative h-20 w-20">
               <Image
-                src="/uniswap-icon.svg"
+                src="/uniswap-icon-gradient.svg"
                 alt="UniSWAP"
                 fill
-                className="object-contain dark:hidden"
-                sizes="80px"
-                priority
-              />
-              <Image
-                src="/uniswap-icon-white.svg"
-                alt="UniSWAP"
-                fill
-                className="hidden object-contain dark:block"
+                className="object-contain"
                 sizes="80px"
                 priority
               />

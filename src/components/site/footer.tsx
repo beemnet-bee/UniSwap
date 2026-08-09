@@ -70,17 +70,10 @@ export function Footer() {
                 className="relative h-10 w-10 shrink-0"
               >
                 <Image
-                  src="/uniswap-icon.svg"
+                  src="/uniswap-icon-gradient.svg"
                   alt="UniSWAP"
                   fill
-                  className="object-contain dark:hidden"
-                  sizes="40px"
-                />
-                <Image
-                  src="/uniswap-icon-white.svg"
-                  alt="UniSWAP"
-                  fill
-                  className="hidden object-contain dark:block"
+                  className="object-contain"
                   sizes="40px"
                 />
               </motion.span>

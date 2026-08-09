@@ -87,21 +87,11 @@ export function Navbar() {
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               className="relative h-9 w-9 shrink-0"
             >
-              {/* Teal icon for light mode */}
               <Image
-                src="/uniswap-icon.svg"
+                src="/uniswap-icon-gradient.svg"
                 alt="UniSWAP"
                 fill
-                className="object-contain dark:hidden"
-                sizes="36px"
-                priority
-              />
-              {/* White icon for dark mode */}
-              <Image
-                src="/uniswap-icon-white.svg"
-                alt="UniSWAP"
-                fill
-                className="hidden object-contain dark:block"
+                className="object-contain"
                 sizes="36px"
                 priority
               />
@@ -210,17 +200,10 @@ export function Navbar() {
                 <Link href="/" className="flex items-center gap-2.5">
                   <span className="relative h-9 w-9 shrink-0">
                     <Image
-                      src="/uniswap-icon.svg"
+                      src="/uniswap-icon-gradient.svg"
                       alt="UniSWAP"
                       fill
-                      className="object-contain dark:hidden"
-                      sizes="36px"
-                    />
-                    <Image
-                      src="/uniswap-icon-white.svg"
-                      alt="UniSWAP"
-                      fill
-                      className="hidden object-contain dark:block"
+                      className="object-contain"
                       sizes="36px"
                     />
                   </span>
