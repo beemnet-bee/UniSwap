@@ -6,7 +6,7 @@ import {
   ArrowRight,
   Building2,
   Mail,
-  Phone,
+  Linkedin,
   Calendar,
   CheckCircle2,
   Sparkles,
@@ -40,7 +40,7 @@ export function PartnerCta() {
       return
     }
     toast({
-      title: 'Thanks — we will be in touch',
+      title: 'Thanks, we will be in touch',
       description: `Our partnerships team will email ${email} within 2 business days.`,
     })
     setEmail('')
@@ -69,7 +69,7 @@ export function PartnerCta() {
           />
 
           <div className="relative grid items-center gap-12 lg:grid-cols-2">
-            {/* Left — pitch */}
+            {/* Left, pitch */}
             <div>
               <Reveal>
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium backdrop-blur-sm">
@@ -85,8 +85,8 @@ export function PartnerCta() {
               <Reveal delay={0.1}>
                 <p className="mt-5 max-w-md text-base text-white/80 sm:text-lg">
                   Tell us a little about your institution and our partnerships
-                  team will send a tailored proposal — pricing, rollout plan,
-                  and a launch timeline — within two business days.
+                  team will send a tailored proposal, pricing, rollout plan,
+                  and a launch timeline, within two business days.
                 </p>
               </Reveal>
 
@@ -104,22 +104,24 @@ export function PartnerCta() {
               <Reveal delay={0.2}>
                 <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/80">
                   <a
-                    href="mailto:partners@uniswap.app"
+                    href="mailto:uniswap.app.team@gmail.com"
                     className="inline-flex items-center gap-2 hover:text-white"
                   >
-                    <Mail className="h-4 w-4" /> partners@uniswap.app
+                    <Mail className="h-4 w-4" /> uniswap.app.team@gmail.com
                   </a>
                   <a
-                    href="tel:+18005551234"
+                    href="https://www.linkedin.com/company/109307417/admin/dashboard/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 hover:text-white"
                   >
-                    <Phone className="h-4 w-4" /> (800) 555-1234
+                    <Linkedin className="h-4 w-4" /> UniSWAP on LinkedIn
                   </a>
                 </div>
               </Reveal>
             </div>
 
-            {/* Right — form card */}
+            {/* Right, form card */}
             <Reveal delay={0.1}>
               <motion.form
                 onSubmit={onSubmit}

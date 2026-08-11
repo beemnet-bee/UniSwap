@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/site/page-header'
 import { FaqDetail } from '@/components/site/faq-detail'
 
 export const metadata = {
-  title: 'FAQ — UniSWAP',
+  title: 'FAQ, UniSWAP',
   description:
     'Questions from campus admins: how UniSWAP verifies students, how it differs from Facebook Marketplace, pricing, sustainability impact measurement, and student safety.',
 }

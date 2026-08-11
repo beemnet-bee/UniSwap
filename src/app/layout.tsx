@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SplashScreen } from "@/components/site/splash-screen";
+import { PageViewTracker } from "@/components/site/page-view-tracker";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -13,7 +14,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "UniSWAP — Keep your goods in the loop",
+  title: "UniSWAP, Keep your goods in the loop",
   description:
     "UniSWAP is a verified student marketplace for swapping, finding lost items, and giving your stuff a second life on campus. Built by students, for students.",
   keywords: [
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     shortcut: ["/favicon.svg"],
   },
   openGraph: {
-    title: "UniSWAP — Keep your goods in the loop",
+    title: "UniSWAP, Keep your goods in the loop",
     description:
       "A verified student marketplace for swapping, finding lost items, and building a more circular campus.",
     siteName: "UniSWAP",
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UniSWAP — Keep your goods in the loop",
+    title: "UniSWAP, Keep your goods in the loop",
     description:
       "A verified student marketplace for swapping, finding lost items, and building a more circular campus.",
   },
@@ -75,6 +76,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SplashScreen />
+          <PageViewTracker />
           {children}
           <Toaster />
         </ThemeProvider>

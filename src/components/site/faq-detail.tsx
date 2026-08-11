@@ -71,13 +71,13 @@ export function FaqDetail() {
             </h2>
             <p className="mt-4 text-base text-muted-foreground sm:text-lg">
               We are happy to walk your team through UniSWAP in a 20-minute call.
-              No pressure, no sales pitch — just answers.
+              No pressure, no sales pitch, just answers.
             </p>
           </Reveal>
 
           <div className="mt-12 grid gap-5 sm:grid-cols-2">
             <motion.a
-              href="mailto:partners@uniswap.app"
+              href="mailto:uniswap.app.team@gmail.com"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -91,7 +91,7 @@ export function FaqDetail() {
               <div className="flex-1">
                 <h3 className="text-base font-bold tracking-tight">Email us</h3>
                 <p className="mt-0.5 text-sm text-muted-foreground">
-                  partners@uniswap.app
+                  uniswap.app.team@gmail.com
                 </p>
               </div>
               <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
@@ -123,7 +123,7 @@ export function FaqDetail() {
               <div>
                 <h3 className="text-lg font-bold">Ready to bring UniSWAP to your campus?</h3>
                 <p className="mt-1 text-sm text-white/80">
-                  Get a tailored proposal — pricing, rollout plan, and launch timeline — in 2 business days.
+                  Get a tailored proposal, pricing, rollout plan, and launch timeline, in 2 business days.
                 </p>
               </div>
               <Button asChild className="shrink-0 rounded-full bg-white px-6 text-foreground hover:bg-white/90">

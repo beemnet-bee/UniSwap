@@ -17,7 +17,7 @@ const ctas: PageCta[] = [
     href: '/about',
     title: 'About UniSWAP',
     description:
-      'Read our story, mission, and vision — why two students decided campus waste was a solvable problem.',
+      'Read our story, mission, and vision. Why students decided campus waste was a solvable problem.',
     icon: Leaf,
     accent: 'blue',
     cta: 'Read our story',
@@ -26,10 +26,19 @@ const ctas: PageCta[] = [
     href: '/features',
     title: 'Features',
     description:
-      'Verified .edu accounts, real-time messaging, SwapShop, Lost & Found, and more — everything students actually use.',
+      'Buy, sell, or swap. Verified .edu accounts, real-time messaging, SwapShop, Lost and Found, and more.',
     icon: Sparkles,
     accent: 'red',
     cta: 'See the features',
+  },
+  {
+    href: '/how-it-works',
+    title: 'How It Works',
+    description:
+      'Four steps from sign-up to exchange. Verify, browse, chat, meet up. Most students swap in a day.',
+    icon: ListChecks,
+    accent: 'blue',
+    cta: 'See the steps',
   },
   {
     href: '/impact',
@@ -37,35 +46,17 @@ const ctas: PageCta[] = [
     description:
       'See the numbers: how 8% adoption diverts 10,000 lbs per campus, and what that means globally.',
     icon: Building2,
-    accent: 'blue',
-    cta: 'See the stats',
-  },
-  {
-    href: '/how-it-works',
-    title: 'How It Works',
-    description:
-      'Four steps from sign-up to swap complete. Verify, browse, chat, meet up — most students swap in a day.',
-    icon: ListChecks,
     accent: 'red',
-    cta: 'See the steps',
+    cta: 'See the stats',
   },
   {
     href: '/team',
     title: 'Our Team',
     description:
-      'Meet the students building UniSWAP — and learn how to join as a campus ambassador.',
+      'Meet the students building UniSWAP and learn how to join as a campus ambassador.',
     icon: Users,
     accent: 'blue',
     cta: 'Meet the team',
-  },
-  {
-    href: '/faq',
-    title: 'FAQ',
-    description:
-      'Common questions from campus admins: verification, safety, pricing, sustainability reporting.',
-    icon: HelpCircle,
-    accent: 'red',
-    cta: 'Read the FAQ',
   },
   {
     href: '/partner',
@@ -73,8 +64,17 @@ const ctas: PageCta[] = [
     description:
       'Bring UniSWAP to your campus. Tell us about your institution and get a tailored proposal.',
     icon: Megaphone,
-    accent: 'blue',
+    accent: 'red',
     cta: 'Get a proposal',
+  },
+  {
+    href: '/faq',
+    title: 'FAQ',
+    description:
+      'Common questions from campus admins: verification, safety, pricing, sustainability reporting.',
+    icon: HelpCircle,
+    accent: 'blue',
+    cta: 'Read the FAQ',
   },
 ]
 

@@ -13,7 +13,7 @@ export function Features() {
       id="features"
       className="relative border-y border-border/40 bg-background py-24 lg:py-32"
     >
-      {/* lighter background per Creation.pdf — subtle dotted grid only */}
+      {/* lighter background per Creation.pdf, subtle dotted grid only */}
       <div className="pointer-events-none absolute inset-0 uniswap-grid-bg opacity-40" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -27,7 +27,7 @@ export function Features() {
           </h2>
           <p className="mt-5 text-base text-muted-foreground sm:text-lg">
             From .edu verification to Lost & Found, UniSWAP ships with the
-            tools students actually use — not a bolted-on checklist of
+            tools students actually use, not a bolted-on checklist of
             half-baked ideas.
           </p>
         </Reveal>
@@ -82,7 +82,7 @@ export function Features() {
             ))}
           </StaggerGroup>
 
-          {/* Right: second phone mockup — spread throughout per Creation.pdf */}
+          {/* Right: second phone mockup, spread throughout per Creation.pdf */}
           <Reveal delay={0.2} className="lg:col-span-5">
             <FeaturePhone />
           </Reveal>

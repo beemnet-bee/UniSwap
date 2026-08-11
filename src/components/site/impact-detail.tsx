@@ -52,7 +52,7 @@ function CounterStat({ value, className }: { value: string; className?: string }
 export function ImpactDetail() {
   return (
     <>
-      {/* Hero stat — the big number */}
+      {/* Hero stat, the big number */}
       <section className="relative py-16 lg:py-24">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <Reveal>
@@ -75,7 +75,7 @@ export function ImpactDetail() {
                   <CounterStat value="10,000 lbs" />
                 </div>
                 <p className="mx-auto mt-4 max-w-xl text-base text-white/80 sm:text-lg">
-                  Diverted from landfill every year at a single campus — with
+                  Diverted from landfill every year at a single campus, with
                   just 8% student adoption. That is the conservative estimate
                   at CWRU alone.
                 </p>
@@ -159,7 +159,7 @@ export function ImpactDetail() {
         </div>
       </section>
 
-      {/* Why reducing waste matters — 3 pillars */}
+      {/* Why reducing waste matters, 3 pillars */}
       <section className="relative border-y border-border/60 bg-card/30 py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-3xl text-center">
@@ -183,13 +183,13 @@ export function ImpactDetail() {
               {
                 icon: Building2,
                 title: 'Campus sustainability',
-                body: 'Universities have their own sustainability goals — AASHE STARS ratings, climate pledges, zero-waste initiatives. UniSWAP gives your sustainability office real, auditable diversion numbers to report.',
+                body: 'Universities have their own sustainability goals, AASHE STARS ratings, climate pledges, zero-waste initiatives. UniSWAP gives your sustainability office real, auditable diversion numbers to report.',
                 accent: 'red' as const,
               },
               {
                 icon: HeartHandshake,
                 title: 'Helping students save money',
-                body: 'The average student spends $2,400+ per year on textbooks, furniture, and electronics. Reusing on campus keeps that money in students\' pockets — and keeps usable goods out of the landfill.',
+                body: 'The average student spends $2,400+ per year on textbooks, furniture, and electronics. Reusing on campus keeps that money in students\' pockets, and keeps usable goods out of the landfill.',
                 accent: 'blue' as const,
               },
             ].map((p, i) => (
@@ -228,7 +228,7 @@ export function ImpactDetail() {
         </div>
       </section>
 
-      {/* Global potential — the 1.5B lbs story */}
+      {/* Global potential, the 1.5B lbs story */}
       <section className="relative py-20 lg:py-28">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <Reveal>
@@ -246,7 +246,7 @@ export function ImpactDetail() {
                 <p className="mt-4 text-base text-muted-foreground sm:text-lg">
                   The potential global diversion impact could exceed 1.5
                   billion pounds of usable goods per year. That is real
-                  tonnage — moved out of the waste stream and back into use,
+                  tonnage, moved out of the waste stream and back into use,
                   campus by campus.
                 </p>
               </div>

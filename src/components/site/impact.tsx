@@ -96,11 +96,11 @@ export function Impact() {
           <p className="mx-auto mt-6 max-w-2xl text-base text-white/80 sm:text-lg">
             Reducing campus waste is not abstract for us. We track every swap
             and surface the diversion numbers back to your sustainability office
-            — so the impact is measurable, not theoretical.
+           , so the impact is measurable, not theoretical.
           </p>
         </Reveal>
 
-        {/* Big stats — bigger fonts per Creation.pdf */}
+        {/* Big stats, bigger fonts per Creation.pdf */}
         <div className="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {impactStats.map((stat, i) => (
             <motion.div
@@ -157,7 +157,7 @@ export function Impact() {
           ))}
         </div>
 
-        {/* infographic — why reducing waste matters */}
+        {/* infographic, why reducing waste matters */}
         <Reveal delay={0.2} className="mt-12">
           <div className="grid gap-4 rounded-3xl border border-white/15 bg-white/[0.04] p-7 backdrop-blur-sm lg:grid-cols-3 lg:items-center">
             <div className="lg:col-span-1">

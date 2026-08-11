@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
   ArrowRight,
@@ -26,12 +27,15 @@ import {
   ShieldCheck,
   Repeat2,
   Leaf,
+  Plus,
+  User,
+  Megaphone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 /* ------------------------------------------------------------------ */
-/* Hero — copy + animated phone mockup                                 */
+/* Hero, copy + animated phone mockup                                 */
 /* ------------------------------------------------------------------ */
 
 export function Hero() {
@@ -41,7 +45,7 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden pt-32 pb-24 sm:pt-36 lg:pt-44 lg:pb-32"
     >
-      {/* Background layers — blue + red combination */}
+      {/* Background layers, blue + red combination */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute -left-32 -top-32 h-[40rem] w-[40rem] rounded-full bg-primary/20 blur-[120px] dark:bg-primary/25" />
         <div className="absolute right-[-10rem] top-20 h-[32rem] w-[32rem] rounded-full bg-[#D84241]/15 blur-[120px]" />
@@ -50,7 +54,7 @@ export function Hero() {
       </div>
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
-        {/* Left column — copy */}
+        {/* Left column, copy */}
         <div className="lg:col-span-6 xl:col-span-6">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -106,7 +110,7 @@ export function Hero() {
           >
             UniSWAP is the verified student marketplace for swapping, finding lost
             items, and giving your stuff a second life on campus. Built by students,
-            for students — and good for the planet.
+            for students, and good for the planet.
           </motion.p>
 
           <motion.div
@@ -126,7 +130,7 @@ export function Hero() {
             </Button>
           </motion.div>
 
-          {/* trust badges — blue + red split */}
+          {/* trust badges, blue + red split */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -148,7 +152,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Right column — phone mockup + floating cards */}
+        {/* Right column, phone mockup + floating cards */}
         <div className="relative lg:col-span-6 xl:col-span-6">
           <PhoneMockup reduce={!!reduce} />
         </div>
@@ -158,38 +162,36 @@ export function Hero() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Phone mockup — cycling screens, animated notifications              */
+/* Phone mockup, cycling screens, animated notifications              */
 /* ------------------------------------------------------------------ */
 
-type Screen = 'feed' | 'chat' | 'swap' | 'lost'
+type Screen = 'home' | 'marketplace' | 'map'
 
-const catalog = [
-  { icon: BookOpen, label: 'Calculus II', price: 'Swap', accent: 'blue' as const },
-  { icon: Lamp, label: 'Desk Lamp', price: '$8', accent: 'red' as const },
-  { icon: Refrigerator, label: 'Mini Fridge', price: '$30', accent: 'blue' as const },
-  { icon: Backpack, label: 'Backpack', price: 'Swap', accent: 'red' as const },
-]
+const screenImages: Record<Screen, string> = {
+  home: '/app-screens/screen-1-home.png',
+  marketplace: '/app-screens/screen-2-marketplace.png',
+  map: '/app-screens/screen-3-map.png',
+}
 
 const screenLabels: Record<Screen, string> = {
-  feed: 'Browse',
-  chat: 'Chat',
-  swap: 'Swap',
-  lost: 'Lost & Found',
+  home: 'Home',
+  marketplace: 'Marketplace',
+  map: 'Map',
 }
 
 function PhoneMockup({ reduce }: { reduce: boolean }) {
-  const [screen, setScreen] = React.useState<Screen>('feed')
+  const [screen, setScreen] = React.useState<Screen>('home')
   const [notif, setNotif] = React.useState(0)
 
   // Cycle through screens automatically
   React.useEffect(() => {
     if (reduce) return
-    const screens: Screen[] = ['feed', 'chat', 'swap', 'lost']
+    const screens: Screen[] = ['home', 'marketplace', 'map']
     let i = 0
     const id = setInterval(() => {
       i = (i + 1) % screens.length
       setScreen(screens[i])
-    }, 3800)
+    }, 4200)
     return () => clearInterval(id)
   }, [reduce])
 
@@ -250,7 +252,7 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
       {/* glow behind phone */}
       <div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-primary/30 via-[#67B0C3]/30 to-[#D84241]/25 blur-[90px]" />
 
-      {/* Floating cards — cycle through 4 notifications */}
+      {/* Floating cards, cycle through 4 notifications */}
       <motion.div
         key={`notif-${notif}`}
         initial={{ opacity: 0, scale: 0.9, y: -8 }}
@@ -279,7 +281,7 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
         </div>
       </motion.div>
 
-      {/* Floating card — top-right: live swap counter */}
+      {/* Floating card, top-right: live swap counter */}
       <motion.div
         initial={{ opacity: 0, x: 20, y: -10 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
@@ -303,7 +305,7 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
         </div>
       </motion.div>
 
-      {/* Floating card — bottom-left: sustainability impact */}
+      {/* Floating card, bottom-left: sustainability impact */}
       <motion.div
         initial={{ opacity: 0, x: -20, y: 10 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
@@ -322,7 +324,7 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
         </div>
       </motion.div>
 
-      {/* Floating card — bottom-right: verified seller */}
+      {/* Floating card, bottom-right: verified seller */}
       <motion.div
         initial={{ opacity: 0, x: 20, y: 10 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
@@ -349,49 +351,26 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
         className="relative z-10"
         whileHover={{ y: -6, rotate: 0.5 }}
       >
-        <div className="relative h-[36rem] w-[17.5rem] rounded-[2.75rem] border-[7px] border-foreground/90 bg-foreground p-1.5 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:h-[38rem] sm:w-[18.5rem]">
-          {/* notch */}
-          <div className="absolute left-1/2 top-1.5 z-30 h-5 w-24 -translate-x-1/2 rounded-full bg-foreground dark:bg-zinc-900" />
-          {/* screen */}
-          <div className="relative h-full w-full overflow-hidden rounded-[2.25rem] bg-gradient-to-br from-white via-[#F7F8F8] to-[#E9F2F6] dark:from-[#131A1D] dark:via-[#0F1416] dark:to-[#1A2326]">
-            {/* status bar */}
-            <div className="flex items-center justify-between px-5 pt-3 text-[10px] font-medium text-foreground/70">
-              <span>9:41</span>
-              <span className="flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-foreground/60" />
-                <span className="h-1.5 w-3 rounded-sm bg-foreground/60" />
-              </span>
-            </div>
-
-            <AnimatePresence mode="wait">
-              {screen === 'feed' && <FeedScreen key="feed" />}
-              {screen === 'chat' && <ChatScreen key="chat" />}
-              {screen === 'swap' && <SwapScreen key="swap" />}
-              {screen === 'lost' && <LostScreen key="lost" />}
-            </AnimatePresence>
-
-            {/* bottom tab bar */}
-            <div className="absolute inset-x-0 bottom-0 flex items-center justify-around border-t border-foreground/5 bg-white/85 px-2 py-2 backdrop-blur-md dark:bg-white/5">
-              {[
-                { icon: Search, active: screen === 'feed', screen: 'feed' as Screen },
-                { icon: MapPin, active: screen === 'lost', screen: 'lost' as Screen },
-                { icon: Repeat2, active: screen === 'swap', screen: 'swap' as Screen },
-                { icon: MessageCircle, active: screen === 'chat', screen: 'chat' as Screen },
-              ].map((t, i) => (
-                <button
-                  key={i}
-                  onClick={() => setScreen(t.screen)}
-                  className={`grid h-7 w-7 place-items-center rounded-full transition-colors ${
-                    t.active
-                      ? 'bg-gradient-to-br from-primary to-[#D84241] text-white'
-                      : 'text-foreground/50'
-                  }`}
-                >
-                  <t.icon className="h-3.5 w-3.5" />
-                </button>
-              ))}
-            </div>
+        <div className="relative h-[36rem] w-[17.5rem] rounded-[2.5rem] border-[5px] border-zinc-900 bg-zinc-900 p-[3px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)_inset] sm:h-[38rem] sm:w-[18.5rem] dark:border-zinc-800">
+          {/* Dynamic island */}
+          <div className="absolute left-1/2 top-2 z-30 flex h-7 w-24 -translate-x-1/2 items-center justify-center gap-1.5 rounded-full bg-black">
+            <div className="h-1.5 w-1.5 rounded-full bg-zinc-700" />
+            <div className="h-1 w-8 rounded-full bg-zinc-800" />
           </div>
+          {/* screen */}
+          <div className="relative h-full w-full overflow-hidden rounded-[2.2rem] bg-[#F3F4F6]">
+            {/* Custom animated app screens */}
+            <AnimatePresence mode="wait">
+              {screen === 'home' && <HomeScreen key="home" />}
+              {screen === 'marketplace' && <MarketplaceScreen key="marketplace" />}
+              {screen === 'map' && <MapScreen key="map" />}
+            </AnimatePresence>
+          </div>
+          {/* Side buttons (volume + power) */}
+          <div className="absolute -left-[3px] top-24 h-8 w-[3px] rounded-l bg-zinc-700" />
+          <div className="absolute -left-[3px] top-36 h-12 w-[3px] rounded-l bg-zinc-700" />
+          <div className="absolute -left-[3px] top-52 h-12 w-[3px] rounded-l bg-zinc-700" />
+          <div className="absolute -right-[3px] top-32 h-16 w-[3px] rounded-r bg-zinc-700" />
         </div>
       </motion.div>
 
@@ -421,7 +400,7 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
         </div>
       </motion.div>
 
-      {/* screen indicator dots — below phone */}
+      {/* screen indicator dots, below phone */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -457,7 +436,7 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Animated counter — counts up to `to` over time                      */
+/* Animated counter, counts up to `to` over time                      */
 /* ------------------------------------------------------------------ */
 
 function AnimatedCounter({ to, duration = 2 }: { to: number; duration?: number }) {
@@ -478,411 +457,361 @@ function AnimatedCounter({ to, duration = 2 }: { to: number; duration?: number }
 }
 
 /* ------------------------------------------------------------------ */
-/* Phone screen: Feed                                                  */
+/* Custom animated app screens (matching the real app UI)              */
 /* ------------------------------------------------------------------ */
 
-function FeedScreen() {
+const NAVY = '#1B5F7A' // UniSWAP dark blue for app header
+const BLUE = '#2B8FB9'
+const LIGHT_BLUE = '#67B0C3'
+const RED = '#D84241'
+
+/* Shared bottom navigation bar */
+function PhoneBottomNav({ active }: { active: 'home' | 'marketplace' | 'map' }) {
+  const tabs = [
+    { icon: Search, label: 'Home', key: 'home' as const },
+    { icon: Tag, label: 'Market', key: 'marketplace' as const },
+    { icon: Plus, label: 'Sell', key: 'sell' as const, center: true },
+    { icon: MessageCircle, label: 'Messages', key: 'chat' as const },
+    { icon: User, label: 'Profile', key: 'profile' as const },
+  ]
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="flex h-full flex-col pb-14"
-    >
-      {/* top app bar */}
-      <div className="px-4 pt-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[10px] text-muted-foreground">Welcome back</p>
-            <p className="text-base font-bold tracking-tight">Swap, don&apos;t toss.</p>
-          </div>
-          <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-primary to-[#D84241] text-white">
-            <Search className="h-4 w-4" />
-          </div>
-        </div>
-        <div className="mt-3 flex items-center gap-1 rounded-full bg-foreground/5 px-3 py-1.5 text-[10px] text-muted-foreground">
-          <Search className="h-3 w-3" />
-          <span>search textbooks, furniture…</span>
-        </div>
-      </div>
-
-      {/* category chips */}
-      <div className="mt-3 flex flex-wrap gap-1.5 px-4">
-        {['All', 'Books', 'Tech', 'Free'].map((c, i) => (
-          <span
-            key={c}
-            className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${
-              i === 0
-                ? 'bg-gradient-to-r from-primary to-[#D84241] text-white'
-                : 'bg-foreground/5 text-foreground/70'
-            }`}
-          >
-            {c}
-          </span>
-        ))}
-      </div>
-
-      {/* featured card */}
-      <div className="mt-3 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-          className="rounded-2xl bg-gradient-to-br from-primary via-[#1B5F7A] to-[#6B1F1F] p-3 text-white shadow-md"
-        >
-          <div className="flex items-center justify-between text-[10px] opacity-90">
-            <span className="inline-flex items-center gap-1">
-              <BadgeCheck className="h-3 w-3" /> Verified seller
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <MapPin className="h-2.5 w-2.5" /> 0.3 mi
-            </span>
-          </div>
-          <div className="mt-2 flex items-center gap-2">
-            <div className="grid h-12 w-12 place-items-center rounded-lg bg-white/20">
-              <Lamp className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <p className="text-xs font-semibold">LED Desk Lamp</p>
-              <p className="text-[10px] opacity-80">Swap for textbooks</p>
-            </div>
-            <span className="rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-bold">
-              SWAP
-            </span>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* item grid — animated stagger entrance */}
-      <div className="mt-3 grid grid-cols-2 gap-2 px-4">
-        {catalog.map((it, i) => (
-          <motion.div
-            key={it.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-            className="rounded-xl bg-white p-2 shadow-sm dark:bg-white/5"
-          >
-            <div
-              className={`grid h-12 w-full place-items-center rounded-lg ${
-                it.accent === 'blue'
-                  ? 'bg-primary/10 text-primary'
-                  : 'bg-[#D84241]/10 text-[#D84241]'
-              }`}
+    <div className="absolute inset-x-0 bottom-0 flex items-center justify-around border-t border-gray-200 bg-white px-1 py-2">
+      {tabs.map((t) => (
+        <div key={t.key} className="flex flex-col items-center gap-0.5">
+          {t.center ? (
+            <motion.div
+              whileHover={{ scale: 1.1, y: -2 }}
+              className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-primary to-[#D84241] text-white shadow-md"
             >
-              <it.icon className="h-5 w-5" strokeWidth={1.75} />
-            </div>
-            <p className="mt-1.5 text-[10px] font-semibold">{it.label}</p>
-            <div className="flex items-center justify-between">
-              <p
-                className={`text-[9px] font-bold ${
-                  it.accent === 'blue' ? 'text-primary' : 'text-[#D84241]'
-                }`}
-              >
-                {it.price}
-              </p>
-              <Heart className="h-2.5 w-2.5 text-muted-foreground" />
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
+              <t.icon className="h-4 w-4" />
+            </motion.div>
+          ) : (
+            <t.icon
+              className={`h-4 w-4 ${active === t.key ? 'text-[#2B8FB9]' : 'text-gray-400'}`}
+            />
+          )}
+          <span
+            className={`text-[8px] ${active === t.key ? 'font-bold text-[#2B8FB9]' : 'text-gray-400'}`}
+          >
+            {t.label}
+          </span>
+        </div>
+      ))}
+    </div>
   )
 }
 
-/* ------------------------------------------------------------------ */
-/* Phone screen: Chat with typing indicator                            */
-/* ------------------------------------------------------------------ */
+/* Status bar */
+function StatusBar() {
+  return (
+    <div className="flex items-center justify-between px-4 pt-2 text-[9px] font-semibold text-white">
+      <span>2:31</span>
+      <span className="flex items-center gap-1">
+        <span className="h-2 w-2 rounded-full bg-white" />
+        <span className="h-2 w-3 rounded-sm bg-white" />
+        <span>97</span>
+      </span>
+    </div>
+  )
+}
 
-function ChatScreen() {
+/* Screen 1: Home */
+function HomeScreen() {
+  const categories = ['Academic Supplies', 'Electronics', 'Furniture & Decor', 'Cloth...']
+  const cards = [
+    { label: 'LIMITED-TIME DEALS', color: 'bg-yellow-50', textColor: 'text-yellow-500', emoji: 'star' },
+    { label: 'freebies!', color: 'bg-white', textColor: 'text-gray-700', emoji: 'heart' },
+    { label: 'Lost & Found', color: 'bg-pink-50', textColor: 'text-pink-600', emoji: 'pin' },
+    { label: 'RECENTLY ADDED!', color: 'bg-white', textColor: 'text-yellow-500', emoji: 'new' },
+  ]
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -30 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="flex h-full flex-col pb-14"
+      className="flex h-full flex-col"
     >
-      {/* chat header */}
-      <div className="flex items-center gap-2 border-b border-foreground/5 px-4 py-3">
-        <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-primary to-[#1B5F7A] text-[10px] font-bold text-white">
-          DK
+      {/* Header */}
+      <div className="bg-[#1B5F7A] px-3 pb-3 pt-2">
+        <StatusBar />
+        <div className="mt-2 flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <div className="grid h-6 w-6 place-items-center rounded-md bg-gradient-to-br from-primary to-[#D84241]">
+              <Recycle className="h-3.5 w-3.5 text-white" />
+            </div>
+            <span className="text-sm font-bold text-white">UniSWAP</span>
+          </div>
+          <span className="text-[10px] text-white/80">Welcome, Suneha!</span>
         </div>
-        <div className="flex-1">
-          <p className="text-xs font-semibold">Daniel K.</p>
-          <p className="flex items-center gap-1 text-[9px] text-emerald-500">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            Online · .edu verified
-          </p>
+        {/* Search bar */}
+        <div className="mt-2.5 flex items-center gap-1.5">
+          <div className="flex flex-1 items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5">
+            <Search className="h-3 w-3 text-gray-400" />
+            <span className="text-[10px] text-gray-400">Search...</span>
+          </div>
+          <div className="relative grid h-7 w-7 place-items-center rounded-full bg-white/20">
+            <Bell className="h-3.5 w-3.5 text-white" />
+            <span className="absolute -right-0.5 -top-0.5 grid h-3.5 w-3.5 place-items-center rounded-full bg-[#D84241] text-[7px] font-bold text-white">
+              1
+            </span>
+          </div>
         </div>
-        <BadgeCheck className="h-4 w-4 text-primary" />
+        {/* Category tabs */}
+        <div className="mt-2.5 flex gap-1.5 overflow-hidden">
+          {categories.map((c, i) => (
+            <motion.span
+              key={c}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + i * 0.05 }}
+              className={`whitespace-nowrap text-[9px] font-medium text-white ${i === 0 ? 'font-bold' : 'opacity-70'}`}
+            >
+              {c}
+              {i < categories.length - 1 && <span className="ml-1.5 opacity-40">|</span>}
+            </motion.span>
+          ))}
+        </div>
       </div>
 
-      {/* messages */}
-      <div className="flex-1 space-y-2 overflow-hidden px-4 py-3">
+      {/* Content */}
+      <div className="flex-1 space-y-2 overflow-hidden p-2.5">
+        {/* 2x2 grid */}
+        <div className="grid grid-cols-2 gap-2">
+          {cards.map((card, i) => (
+            <motion.div
+              key={card.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 + i * 0.08, type: 'spring', stiffness: 300 }}
+              whileHover={{ scale: 1.03 }}
+              className={`relative flex h-16 items-center justify-center rounded-xl ${card.color} p-2 text-center shadow-sm`}
+            >
+              <span className={`text-[9px] font-bold ${card.textColor}`}>{card.label}</span>
+              {card.label === 'RECENTLY ADDED!' && (
+                <span className="absolute bottom-1 right-1 rounded-full bg-[#D84241] px-1.5 py-0.5 text-[7px] font-bold text-white">
+                  New
+                </span>
+              )}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Swap Shop card */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-start"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+          whileHover={{ scale: 1.02 }}
+          className="flex items-center justify-between rounded-xl bg-gradient-to-r from-[#2B8FB9] to-[#67B0C3] p-2.5 text-white"
         >
-          <div className="max-w-[75%] rounded-2xl rounded-tl-sm bg-foreground/5 px-3 py-2 text-[10px]">
-            Hey! Still got the desk lamp?
+          <div>
+            <p className="text-[11px] font-bold">SWAP Shop</p>
+            <p className="text-[8px] opacity-90">Trade items with others!</p>
           </div>
+          <motion.div
+            animate={{ rotate: [0, 180, 360] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+          >
+            <Repeat2 className="h-5 w-5" />
+          </motion.div>
         </motion.div>
+
+        {/* Requested Items card */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.6 }}
-          className="flex justify-end"
+          whileHover={{ scale: 1.02 }}
+          className="flex items-center gap-2 rounded-xl border-2 border-[#1B5F7A] bg-white p-2.5"
         >
-          <div className="max-w-[75%] rounded-2xl rounded-tr-sm bg-gradient-to-br from-primary to-[#1B5F7A] px-3 py-2 text-[10px] text-white">
-            Yeah! Looking to swap for a Calc II textbook.
+          <Megaphone className="h-4 w-4 text-[#1B5F7A]" />
+          <div className="flex-1">
+            <p className="text-[10px] font-bold text-[#1B5F7A]">Requested Items</p>
+            <p className="text-[8px] text-gray-500">See what buyers want</p>
           </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-          className="flex justify-start"
-        >
-          <div className="max-w-[75%] rounded-2xl rounded-tl-sm bg-foreground/5 px-3 py-2 text-[10px]">
-            Perfect — I have one. Meet at KSL Library?
-          </div>
-        </motion.div>
-
-        {/* typing indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="flex justify-start"
-        >
-          <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-foreground/5 px-3 py-2.5">
-            {[0, 1, 2].map((i) => (
-              <motion.span
-                key={i}
-                className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60"
-                animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  delay: i * 0.15,
-                  ease: 'easeInOut',
-                }}
-              />
-            ))}
-          </div>
+          <ArrowRight className="h-3 w-3 text-[#1B5F7A]" />
         </motion.div>
       </div>
 
-      {/* input bar */}
-      <div className="border-t border-foreground/5 px-3 py-2">
-        <div className="flex items-center gap-2 rounded-full bg-foreground/5 px-3 py-1.5">
-          <span className="text-[10px] text-muted-foreground">Type a message…</span>
-          <div className="ml-auto grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-primary to-[#D84241] text-white">
-            <Send className="h-3 w-3" />
-          </div>
-        </div>
-      </div>
+      <PhoneBottomNav active="home" />
     </motion.div>
   )
 }
 
-/* ------------------------------------------------------------------ */
-/* Phone screen: Swap progress with animated steps                     */
-/* ------------------------------------------------------------------ */
-
-function SwapScreen() {
-  const steps = [
-    { icon: BadgeCheck, label: 'Verified', done: true },
-    { icon: MessageCircle, label: 'Matched', done: true },
-    { icon: MapPin, label: 'Meet up', done: true },
-    { icon: Heart, label: 'Swap done', done: false },
+/* Screen 2: Marketplace */
+function MarketplaceScreen() {
+  const categories = [
+    { label: 'Academic Supplies', color: 'from-blue-400 to-blue-600', icon: BookOpen },
+    { label: 'Electronics', color: 'from-purple-400 to-purple-600', icon: Headphones },
+    { label: 'Furniture & Decor', color: 'from-green-400 to-green-600', icon: Lamp },
+    { label: 'Clothing & Accs', color: 'from-pink-400 to-pink-600', icon: Backpack },
+    { label: 'Sports & Fitness', color: 'from-orange-400 to-orange-600', icon: Tag },
+    { label: 'Kitchen & Dining', color: 'from-teal-400 to-teal-600', icon: Coffee },
   ]
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -30 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="flex h-full flex-col items-center px-4 pb-14 pt-5"
+      className="flex h-full flex-col"
     >
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-        Swap in progress
-      </p>
-      <p className="mt-1 text-base font-bold">Lamp ↔ Calculus II</p>
-      <p className="text-[10px] text-muted-foreground">with Daniel K. · KSL Library</p>
-
-      {/* swap visual */}
-      <div className="mt-6 flex w-full items-center justify-center gap-3">
-        <motion.div
-          animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="grid h-14 w-14 place-items-center rounded-2xl bg-primary/15 text-primary"
-        >
-          <Lamp className="h-6 w-6" />
-        </motion.div>
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-          className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-primary to-[#D84241] text-white"
-        >
-          <Repeat2 className="h-3.5 w-3.5" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-          className="grid h-14 w-14 place-items-center rounded-2xl bg-[#D84241]/15 text-[#D84241]"
-        >
-          <BookOpen className="h-6 w-6" />
-        </motion.div>
-      </div>
-
-      {/* progress steps */}
-      <div className="mt-7 w-full space-y-2.5">
-        {steps.map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 + i * 0.15 }}
-            className="flex items-center gap-3"
-          >
-            <span
-              className={`grid h-7 w-7 place-items-center rounded-full ${
-                s.done
-                  ? 'bg-gradient-to-br from-primary to-[#D84241] text-white'
-                  : 'bg-foreground/5 text-muted-foreground'
-              }`}
-            >
-              <s.icon className="h-3.5 w-3.5" />
-            </span>
-            <span className={`text-[11px] font-medium ${s.done ? '' : 'text-muted-foreground'}`}>
-              {s.label}
-            </span>
-            {s.done && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.4 + i * 0.15, type: 'spring' }}
-                className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-500"
-              />
-            )}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* progress bar */}
-      <div className="mt-6 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
-        <motion.div
-          initial={{ width: '0%' }}
-          animate={{ width: '75%' }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-          className="h-full rounded-full bg-gradient-to-r from-primary via-[#67B0C3] to-[#D84241]"
-        />
-      </div>
-      <p className="mt-1.5 text-[9px] text-muted-foreground">75% complete · 1 step left</p>
-    </motion.div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* Phone screen: Lost & Found                                          */
-/* ------------------------------------------------------------------ */
-
-function LostScreen() {
-  const items = [
-    { icon: BadgeCheck, label: 'Student ID Card', status: 'Found', location: 'KSL Library', color: 'emerald' as const },
-    { icon: Backpack, label: 'Black Backpack', status: 'Lost', location: 'Tinkham Veale', color: 'red' as const },
-    { icon: Headphones, label: 'White Earbuds', status: 'Found', location: 'Bingham', color: 'emerald' as const },
-    { icon: Coffee, label: 'Hydro Flask', status: 'Lost', location: 'Fribley', color: 'red' as const },
-  ]
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="flex h-full flex-col pb-14"
-    >
-      {/* header */}
-      <div className="px-4 pt-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-              Campus Lost & Found
-            </p>
-            <p className="text-base font-bold tracking-tight">Reunite your stuff</p>
-          </div>
-          <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-[#D84241] to-[#6B1F1F] text-white">
-            <MapPin className="h-4 w-4" />
-          </div>
-        </div>
-      </div>
-
-      {/* status tabs */}
-      <div className="mt-3 flex gap-1.5 px-4">
-        {['All', 'Lost', 'Found'].map((c, i) => (
-          <span
-            key={c}
-            className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${
-              i === 0
-                ? 'bg-gradient-to-r from-primary to-[#D84241] text-white'
-                : 'bg-foreground/5 text-foreground/70'
-            }`}
-          >
-            {c}
-          </span>
-        ))}
-      </div>
-
-      {/* item list */}
-      <div className="mt-3 flex-1 space-y-2 overflow-hidden px-3">
-        {items.map((it, i) => (
-          <motion.div
-            key={it.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 + i * 0.12, duration: 0.4 }}
-            className="flex items-center gap-2 rounded-xl bg-white p-2 shadow-sm dark:bg-white/5"
-          >
-            <span
-              className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ${
-                it.color === 'emerald'
-                  ? 'bg-emerald-500/15 text-emerald-500'
-                  : 'bg-[#D84241]/15 text-[#D84241]'
-              }`}
-            >
-              <it.icon className="h-4 w-4" strokeWidth={1.75} />
-            </span>
-            <div className="flex-1 text-[10px] leading-tight">
-              <p className="font-semibold">{it.label}</p>
-              <p className="flex items-center gap-1 text-muted-foreground">
-                <MapPin className="h-2.5 w-2.5" />
-                {it.location}
-              </p>
+      {/* Header */}
+      <div className="bg-[#1B5F7A] px-3 pb-3 pt-2">
+        <StatusBar />
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-sm font-bold text-white">Marketplace</span>
+          <div className="flex items-center gap-2">
+            <Search className="h-3.5 w-3.5 text-white" />
+            <div className="relative">
+              <Bell className="h-3.5 w-3.5 text-white" />
+              <span className="absolute -right-1 -top-1 grid h-3 w-3 place-items-center rounded-full bg-[#D84241] text-[6px] font-bold text-white">
+                1
+              </span>
             </div>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
-                it.color === 'emerald'
-                  ? 'bg-emerald-500/15 text-emerald-500'
-                  : 'bg-[#D84241]/15 text-[#D84241]'
-              }`}
-            >
-              {it.status}
-            </span>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* post CTA */}
-      <div className="absolute inset-x-3 bottom-14">
-        <div className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-primary to-[#D84241] px-3 py-2 text-white">
-          <span className="text-[10px] font-semibold">Report an item</span>
+          </div>
         </div>
       </div>
+
+      {/* Category grid */}
+      <div className="flex-1 overflow-hidden p-3">
+        <div className="grid grid-cols-2 gap-2.5">
+          {categories.map((cat, i) => (
+            <motion.div
+              key={cat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + i * 0.08, type: 'spring', stiffness: 300 }}
+              whileHover={{ y: -4, scale: 1.03 }}
+              className="overflow-hidden rounded-xl bg-white shadow-sm"
+            >
+              <div className={`relative flex h-20 items-center justify-center bg-gradient-to-br ${cat.color}`}>
+                <cat.icon className="h-8 w-8 text-white/90" strokeWidth={1.5} />
+              </div>
+              <p className="py-1.5 text-center text-[9px] font-semibold text-gray-700">
+                {cat.label}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <PhoneBottomNav active="marketplace" />
+    </motion.div>
+  )
+}
+
+/* Screen 3: Map */
+function MapScreen() {
+  const pins = [
+    { num: 2, x: '20%', y: '30%' },
+    { num: 3, x: '50%', y: '20%' },
+    { num: 3, x: '70%', y: '40%' },
+    { num: 4, x: '35%', y: '55%' },
+    { num: 5, x: '60%', y: '65%' },
+    { num: 3, x: '25%', y: '70%' },
+  ]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -30 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="flex h-full flex-col"
+    >
+      {/* Header */}
+      <div className="bg-[#1B5F7A] px-3 pb-3 pt-2">
+        <StatusBar />
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-sm font-bold text-white">Marketplace</span>
+          <div className="flex items-center gap-2">
+            <Search className="h-3.5 w-3.5 text-white" />
+            <div className="relative">
+              <Bell className="h-3.5 w-3.5 text-white" />
+              <span className="absolute -right-1 -top-1 grid h-3 w-3 place-items-center rounded-full bg-[#D84241] text-[6px] font-bold text-white">
+                1
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Category pill */}
+      <div className="bg-[#F3F4F6] px-3 py-2">
+        <motion.span
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="inline-block rounded-full bg-gray-200 px-3 py-1 text-[9px] font-medium text-gray-700"
+        >
+          Other / Misc
+        </motion.span>
+      </div>
+
+      {/* Product card */}
+      <div className="px-3">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="overflow-hidden rounded-xl bg-white shadow-sm"
+        >
+          <div className="h-20 bg-gradient-to-br from-gray-700 to-gray-900" />
+        </motion.div>
+      </div>
+
+      {/* Map section */}
+      <div className="flex-1 overflow-hidden px-3 pt-2">
+        <div className="mb-1.5 flex items-center gap-1">
+          <MapPin className="h-3 w-3 text-[#2B8FB9]" />
+          <span className="text-[10px] font-semibold text-gray-700">Listings Near You</span>
+        </div>
+        <div className="relative h-full overflow-hidden rounded-xl bg-gradient-to-br from-green-50 to-blue-50">
+          {/* Map roads */}
+          <div className="absolute inset-0">
+            <div className="absolute left-0 right-0 top-1/3 h-0.5 bg-gray-200" />
+            <div className="absolute left-0 right-0 top-2/3 h-0.5 bg-gray-200" />
+            <div className="absolute left-1/3 top-0 h-full w-0.5 bg-gray-200" />
+            <div className="absolute left-2/3 top-0 h-full w-0.5 bg-gray-200" />
+          </div>
+
+          {/* Location count badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="absolute left-1/2 top-2 -translate-x-1/2 rounded-full bg-[#2B8FB9] px-2.5 py-1 text-[8px] font-bold text-white shadow-md"
+          >
+            10 locations with items
+          </motion.div>
+
+          {/* Map pins */}
+          {pins.map((pin, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 + i * 0.1, type: 'spring', stiffness: 300 }}
+              whileHover={{ scale: 1.2 }}
+              className="absolute"
+              style={{ left: pin.x, top: pin.y }}
+            >
+              <motion.div
+                animate={{ y: [0, -3, 0] }}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                className="grid h-7 w-7 place-items-center rounded-full bg-[#2B8FB9] text-[9px] font-bold text-white shadow-md ring-2 ring-white"
+              >
+                {pin.num}
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <PhoneBottomNav active="marketplace" />
     </motion.div>
   )
 }

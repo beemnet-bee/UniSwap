@@ -39,57 +39,57 @@ export const features: Feature[] = [
     icon: BadgeCheck,
     title: 'Verified student accounts',
     description:
-      'Every member verifies with a .edu email so the only people on your campus marketplace are real, current students — no scammers, no off-campus noise, no creepy meetups.',
+      'Every member verifies with a .edu email so the only people on your campus marketplace are real, current students. No scammers, no off-campus noise, no creepy meetups.',
     accent: 'blue',
+  },
+  {
+    icon: Tag,
+    title: 'Buy, sell, or swap',
+    description:
+      'List items for cash, give them away for free, or offer them for trade. Most listings are sold or given away. SwapShop is an optional feature for students who prefer to trade directly.',
+    accent: 'red',
   },
   {
     icon: MessagesSquare,
     title: 'Real-time messaging',
     description:
-      'In-app chat keeps negotiations inside UniSWAP. Coordinate pickups, share photos, and confirm swaps without giving out your phone number.',
-    accent: 'red',
+      'In-app chat keeps negotiations inside UniSWAP. Coordinate pickups, share photos, and confirm deals without giving out your phone number.',
+    accent: 'blue',
   },
   {
     icon: Search,
     title: 'Smart search & filtering',
     description:
       'Filter by category, condition, distance, and price. Save searches and get notified the moment a matching item is posted.',
-    accent: 'blue',
+    accent: 'red',
   },
   {
     icon: BellRing,
     title: 'Instant notifications',
     description:
       'Know the second someone messages back, claims your item, or posts something on your wish list. Speed matters when the deal is good.',
-    accent: 'red',
+    accent: 'blue',
   },
   {
     icon: MapPin,
     title: 'Lost & Found',
     description:
-      'Dropped your student ID at the library? Left your water bottle in lab? Post it on the campus Lost & Found board and reunite stuff with its owner.',
+      'Dropped your student ID at the library? Left your water bottle in lab? Post it on the campus Lost and Found board and reunite stuff with its owner.',
     accent: 'red',
   },
   {
     icon: Repeat2,
-    title: 'SwapShop',
+    title: 'SwapShop (optional)',
     description:
-      'Items can be exchanged instead of bought — trade a desk lamp for a textbook, a mini-fridge for a bike. Money is optional on UniSWAP.',
+      'Prefer to trade instead of sell? SwapShop lets students exchange items directly: a lamp for a textbook, a mini-fridge for a bike. Money is never required.',
     accent: 'blue',
-  },
-  {
-    icon: Tag,
-    title: 'Limited-time deals',
-    description:
-      'Move-out week flash sales, graduation clean-outs, and back-to-school bundles. Post time-limited offers so stuff actually leaves your dorm.',
-    accent: 'red',
   },
   {
     icon: ShieldCheck,
     title: 'Safer by design',
     description:
-      'Verified .edu, on-campus meetups, and reporting tools built for students. Safety is not a feature — it is the foundation.',
-    accent: 'blue',
+      'Verified .edu, on-campus meetups, and reporting tools built for students. Safety is not a feature. It is the foundation.',
+    accent: 'red',
   },
 ]
 
@@ -113,21 +113,21 @@ export const steps: Step[] = [
     icon: Search,
     title: 'Browse or post items',
     description:
-      'Scroll the feed, save items you love, or list your own in under 30 seconds with photos, condition, and category.',
+      'Scroll the feed, save items you love, or list your own in under 30 seconds with photos, condition, and category. Choose to sell, give away, or swap.',
   },
   {
     num: '03',
     icon: MessagesSquare,
     title: 'Chat with other students',
     description:
-      'Message in-app to ask questions, negotiate a swap, and lock in a meetup time. Your number stays private until you choose.',
+      'Message in-app to ask questions, negotiate a price or swap, and lock in a meetup time. Your number stays private until you choose.',
   },
   {
     num: '04',
     icon: HandHeart,
-    title: 'Meet up & swap',
+    title: 'Meet up and exchange',
     description:
-      'Pick a public spot on campus, hand off the item, and rate the swap. Done — your old stuff has a new life with someone who needs it.',
+      'Pick a public spot on campus, hand off the item, and rate the exchange. Done. Your old stuff has a new life with someone who needs it.',
   },
 ]
 
@@ -186,7 +186,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     quote:
-      'Found my lost ID card on the Lost & Found board within an hour. That alone would have been worth it — the rest is just bonus.',
+      'Found my lost ID card on the Lost & Found board within an hour. That alone would have been worth it . the rest is just bonus.',
     name: 'Daniel K.',
     role: 'Sophomore, Mechanical Engineering',
     initials: 'DK',
@@ -207,7 +207,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     quote:
-      'Saved probably three hundred dollars on textbooks this semester. Being broke in college and finding a way to make that less of a problem — that is UniSWAP.',
+      'Saved probably three hundred dollars on textbooks this semester. Being broke in college and finding a way to make that less of a problem . that is UniSWAP.',
     name: 'Jess L.',
     role: 'First-year, Undeclared',
     initials: 'JL',
@@ -226,24 +226,24 @@ export const faqs: Faq[] = [
       'Every account is verified through their university .edu email at sign-up. We confirm the email is active and tied to a current student record before the account can post, message, or claim an item. This keeps the marketplace closed to your campus community.',
   },
   {
-    question: 'Is UniSWAP only for buying and selling?',
+    question: 'Can you buy and sell on UniSWAP, or is it only for swapping?',
     answer:
-      'No — UniSWAP is built around exchange. The SwapShop feature lets students trade items directly: a lamp for a textbook, a kettle for a bike lock. Money is allowed, but it is not the only option. We want to make reuse the default.',
+      'You can do all three: buy, sell, and swap. Most listings are sold for cash or given away for free. SwapShop is an optional feature for students who prefer to trade items directly instead, like a lamp for a textbook or a kettle for a bike lock. Money is allowed but never required.',
   },
   {
     question: 'How is UniSWAP different from Facebook Marketplace or Depop?',
     answer:
-      'Three things: verified .edu membership so everyone is a real student on your campus, a Lost & Found board built specifically for campus life, and a sustainability mission baked into the product — every swap is tracked and reported back to your administration as landfill diversion.',
+      'Three things: verified .edu membership so everyone is a real student on your campus, a Lost and Found board built specifically for campus life, and a sustainability mission baked into the product. Every transaction is tracked and reported back to your administration as landfill diversion.',
   },
   {
     question: 'What does it cost to bring UniSWAP to our campus?',
     answer:
-      'Pricing depends on enrollment, deployment scope, and integration needs. Please reach out via the Partner With Us section — we will send a tailored proposal for your institution within a few business days.',
+      'Pricing depends on enrollment, deployment scope, and integration needs. Please reach out via the Partner With Us page and we will send a tailored proposal for your institution within a few business days.',
   },
   {
     question: 'How do you measure the sustainability impact?',
     answer:
-      'Each completed swap or sale is logged with an estimated weight by category. We aggregate this into a campus-wide dashboard so your sustainability office can report real diversion numbers in their annual review — not theoretical numbers, but actual goods moved.',
+      'Each completed sale, freebie, or swap is logged with an estimated weight by category. We aggregate this into a campus-wide dashboard so your sustainability office can report real diversion numbers in their annual review. Not theoretical numbers, but actual goods moved.',
   },
   {
     question: 'What about student safety?',
@@ -252,62 +252,74 @@ export const faqs: Faq[] = [
   },
 ]
 
-/* Nav order matches the visual order of sections on the page. */
+/* Nav order matches the visual order of pages. */
 export const navLinks = [
-  { href: '#about', label: 'About' },
-  { href: '#features', label: 'Features' },
-  { href: '#impact', label: 'Impact' },
-  { href: '#how-it-works', label: 'How It Works' },
-  { href: '#team', label: 'Team' },
-  { href: '#faq', label: 'FAQ' },
-  { href: '#partner', label: 'Partner With Us' },
+  { href: '/about', label: 'About' },
+  { href: '/features', label: 'Features' },
+  { href: '/how-it-works', label: 'How It Works' },
+  { href: '/impact', label: 'Impact' },
+  { href: '/team', label: 'Team' },
+  { href: '/partner', label: 'Partner With Us' },
+  { href: '/faq', label: 'FAQ' },
 ] as const
 
 export type TeamMember = {
   name: string
   role: string
+  subrole: string
   bio: string
+  image: string | null
   initials: string
   icon: typeof BadgeCheck
   accent: 'blue' | 'red'
+  linkedin: string
+  email: string | null
+  school: string
 }
 
 export const team: TeamMember[] = [
   {
-    name: 'Maya Rivera',
-    role: 'Co-founder & CEO',
-    bio: 'Environmental Studies senior who watched three years of move-out week dumpsters overflow. Built UniSWAP to make reuse the obvious choice.',
-    initials: 'MR',
-    icon: Rocket,
+    name: 'Suong Tran',
+    role: 'Co-Founder',
+    subrole: 'Sustainability & Outreach Lead',
+    bio: 'Leads sustainability partnerships and campus outreach. Works directly with student affairs and sustainability offices to align UniSWAP with each campus waste reduction goals and reporting needs.',
+    image: '/team/suong-tran.jpg',
+    initials: 'ST',
+    icon: Leaf,
     accent: 'blue',
+    linkedin: 'https://www.linkedin.com/in/suong-tran-n/',
+    email: null,
+    school: 'Case Western Reserve University',
   },
   {
-    name: 'Daniel Kim',
-    role: 'Co-founder & CTO',
-    bio: 'Computer Science junior. Designed the verification system and the real-time swap feed. Believes good software makes good behavior easy.',
-    initials: 'DK',
-    icon: Code2,
-    accent: 'red',
-  },
-  {
-    name: 'Priya Shah',
-    role: 'Head of Partnerships',
-    bio: 'Public Health graduate student. Talks to campus sustainability offices and student affairs teams to make UniSWAP fit each campus.',
-    initials: 'PS',
-    icon: Megaphone,
-    accent: 'blue',
-  },
-  {
-    name: 'Andre Torres',
-    role: 'Head of Design',
-    bio: 'UX designer and graduate student. Makes sure the app feels welcoming, safe, and genuinely fun to use for every student.',
-    initials: 'AT',
+    name: 'Suneha Shelke',
+    role: 'Co-Founder',
+    subrole: 'Design & Strategy Lead',
+    bio: 'Owns product design and brand strategy. Shapes the UniSWAP experience to feel welcoming, safe, and genuinely fun, making reuse the obvious choice for students.',
+    image: '/team/suneha-shelke.jpg',
+    initials: 'SS',
     icon: Palette,
     accent: 'red',
+    linkedin: 'https://www.linkedin.com/in/suneha-shelke-526147253/',
+    email: 'sonishelke1@gmail.com',
+    school: 'Case Western Reserve University',
+  },
+  {
+    name: 'Nikhil Shelke',
+    role: 'App Developer',
+    subrole: 'Engineering',
+    bio: 'Builds and ships the UniSWAP app: verification flow, real-time messaging, swap tracking, and the dashboard. Believes good software makes good behavior easy.',
+    image: null,
+    initials: 'NS',
+    icon: Code2,
+    accent: 'blue',
+    linkedin: 'https://www.linkedin.com/in/nikhil-shelke-946b1b3bb/',
+    email: null,
+    school: 'Sylvania Northview High School',
   },
 ]
 
-/* Catalog item types used in the phone mockups — all lucide icons, no emojis. */
+/* Catalog item types used in the phone mockups . all lucide icons, no emojis. */
 export const catalogItems = [
   { icon: BookOpen, label: 'Calculus II', price: 'Swap', accent: 'blue' as const },
   { icon: Lamp, label: 'Desk Lamp', price: '$8', accent: 'red' as const },

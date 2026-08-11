@@ -21,11 +21,11 @@ type NavItem = { href: string; label: string }
 const navItems: NavItem[] = [
   { href: '/about', label: 'About' },
   { href: '/features', label: 'Features' },
-  { href: '/impact', label: 'Impact' },
   { href: '/how-it-works', label: 'How It Works' },
+  { href: '/impact', label: 'Impact' },
   { href: '/team', label: 'Team' },
-  { href: '/faq', label: 'FAQ' },
   { href: '/partner', label: 'Partner With Us' },
+  { href: '/faq', label: 'FAQ' },
 ]
 
 export function Navbar() {
@@ -60,7 +60,7 @@ export function Navbar() {
     }
   }, [open])
 
-  // Determine if a nav item is "active" — exact match for routes
+  // Determine if a nav item is "active", exact match for routes
   const isActive = (item: NavItem) => pathname === item.href
 
   return (
@@ -71,7 +71,7 @@ export function Navbar() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 lg:px-8"
       >
-        {/* CONTAINED floating pill — not full width */}
+        {/* CONTAINED floating pill, not full width */}
         <nav
           className={cn(
             'relative mx-auto flex h-16 max-w-6xl items-center justify-between overflow-hidden rounded-2xl px-3 transition-all duration-300 sm:px-4',
@@ -101,7 +101,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop nav — bigger fonts per Creation.pdf */}
+          {/* Desktop nav, bigger fonts per Creation.pdf */}
           <div className="hidden items-center gap-0.5 lg:flex">
             {navItems.map((item) => {
               const active = isActive(item)
@@ -167,7 +167,7 @@ export function Navbar() {
             </Button>
           </div>
 
-          {/* Scroll progress bar — INSIDE the pill, no overflow */}
+          {/* Scroll progress bar, INSIDE the pill, no overflow */}
           <motion.div
             className="absolute inset-x-0 bottom-0 h-0.5 origin-left scroll-progress"
             style={{ scaleX: progress }}
@@ -176,7 +176,7 @@ export function Navbar() {
 
       </motion.header>
 
-      {/* Mobile sidebar — slide in from the right */}
+      {/* Mobile sidebar, slide in from the right */}
       <AnimatePresence>
         {open && (
           <>

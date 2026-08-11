@@ -1,15 +1,12 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -29,4 +26,77 @@ model Post {
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Contact / partner form submissions
+model AdminMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  role      String?
+  school    String
+  phone     String?
+  students  String?
+  message   String?
+  read      Boolean  @default(false)
+  replied   Boolean  @default(false)
+  reply     String?
+  repliedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Admin users
+model AdminUser {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  email     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Admin-to-admin global chat
+model AdminChat {
+  id        String    @id @default(cuid())
+  username  String
+  message   String
+  editedAt  DateTime?
+  replyToId String?
+  createdAt DateTime  @default(now())
+
+  reactions AdminChatReaction[]
+  seenBy    AdminChatSeen[]
+}
+
+// Chat message reactions (custom SVG emoji types)
+model AdminChatReaction {
+  id        String   @id @default(cuid())
+  chatId    String
+  username  String
+  emoji     String   // "like", "love", "laugh", "wow", "sad", "angry"
+  createdAt DateTime @default(now())
+
+  chat      AdminChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, username, emoji])
+}
+
+// Track which admins have seen each message
+model AdminChatSeen {
+  id        String   @id @default(cuid())
+  chatId    String
+  username  String
+  seenAt    DateTime @default(now())
+
+  chat      AdminChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, username])
+}
+
+// Simple page-view counter
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  createdAt DateTime @default(now())
 }

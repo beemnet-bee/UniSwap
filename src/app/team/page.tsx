@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/site/page-header'
 import { TeamDetail } from '@/components/site/team-detail'
 
 export const metadata = {
-  title: 'Our Team — UniSWAP',
+  title: 'Our Team, UniSWAP',
   description:
     'UniSWAP was created by two college students. Meet the team building the campus marketplace for circular consumption.',
 }
@@ -18,7 +18,7 @@ export default function TeamPage() {
           eyebrow="Our Team"
           title="Built by students,"
           highlight="for students."
-          subtitle="UniSWAP was created by two college students who noticed unsustainable consumption trends on their campus. We are a small, mission-driven team — and we are growing."
+          subtitle="UniSWAP was created by two college students who noticed unsustainable consumption trends on their campus. We are a small, mission-driven team, and we are growing."
           crumbs={[{ label: 'Team' }]}
           accent="blue"
         />

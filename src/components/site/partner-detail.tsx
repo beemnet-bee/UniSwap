@@ -7,7 +7,7 @@ import {
   ArrowRight,
   Building2,
   Mail,
-  Phone,
+  Linkedin,
   Calendar,
   CheckCircle2,
   Sparkles,
@@ -42,7 +42,7 @@ const benefits = [
     icon: LayoutDashboard,
     title: 'Real-time diversion dashboard',
     description:
-      'Your sustainability office gets a live dashboard of swaps, weight diverted, and student participation — exportable for annual reports.',
+      'Your sustainability office gets a live dashboard of swaps, weight diverted, and student participation, exportable for annual reports.',
   },
   {
     icon: Users,
@@ -67,6 +67,7 @@ const timeline = [
 
 export function PartnerDetail() {
   const { toast } = useToast()
+  const [submitting, setSubmitting] = React.useState(false)
   const [form, setForm] = React.useState({
     name: '',
     role: '',
@@ -77,7 +78,7 @@ export function PartnerDetail() {
     message: '',
   })
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.name || !form.school || !form.email) {
       toast({
@@ -87,11 +88,34 @@ export function PartnerDetail() {
       })
       return
     }
-    toast({
-      title: 'Thanks — we will be in touch',
-      description: `Our partnerships team will email ${form.email} within 2 business days.`,
-    })
-    setForm({ name: '', role: '', school: '', email: '', phone: '', students: '', message: '' })
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to send')
+      }
+      toast({
+        title: 'Thanks, we will be in touch',
+        description: `Our partnerships team will email ${form.email} within 2 business days.`,
+      })
+      setForm({ name: '', role: '', school: '', email: '', phone: '', students: '', message: '' })
+    } catch (err) {
+      toast({
+        title: 'Something went wrong',
+        description:
+          err instanceof Error
+            ? err.message
+            : 'Could not send your message. Please try again or email uniswap.app.team@gmail.com',
+        variant: 'destructive',
+      })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -100,7 +124,7 @@ export function PartnerDetail() {
       <section className="relative py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Left — benefits */}
+            {/* Left, benefits */}
             <div>
               <Reveal>
                 <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -117,7 +141,7 @@ export function PartnerDetail() {
               <Reveal delay={0.1}>
                 <p className="mt-4 text-base text-muted-foreground sm:text-lg">
                   No lengthy procurement. No custom development. We bring the
-                  platform, the playbook, and the people — you bring the campus.
+                  platform, the playbook, and the people, you bring the campus.
                 </p>
               </Reveal>
 
@@ -153,29 +177,31 @@ export function PartnerDetail() {
               {/* contact methods */}
               <Reveal delay={0.2} className="mt-8 grid gap-3 sm:grid-cols-2">
                 <a
-                  href="mailto:partners@uniswap.app"
+                  href="mailto:uniswap.app.team@gmail.com"
                   className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary"
                 >
                   <Mail className="h-5 w-5 text-primary" />
                   <div>
                     <p className="text-xs text-muted-foreground">Email us</p>
-                    <p className="text-sm font-semibold">partners@uniswap.app</p>
+                    <p className="text-sm font-semibold">uniswap.app.team@gmail.com</p>
                   </div>
                 </a>
                 <a
-                  href="tel:+18005551234"
+                  href="https://www.linkedin.com/company/109307417/admin/dashboard/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-[#D84241]"
                 >
-                  <Phone className="h-5 w-5 text-[#D84241]" />
+                  <Linkedin className="h-5 w-5 text-[#D84241]" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Call us</p>
-                    <p className="text-sm font-semibold">(800) 555-1234</p>
+                    <p className="text-xs text-muted-foreground">Connect on LinkedIn</p>
+                    <p className="text-sm font-semibold">UniSWAP on LinkedIn</p>
                   </div>
                 </a>
               </Reveal>
             </div>
 
-            {/* Right — form */}
+            {/* Right, form */}
             <Reveal delay={0.1}>
               <motion.form
                 onSubmit={onSubmit}
@@ -290,10 +316,11 @@ export function PartnerDetail() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="mt-6 h-12 w-full rounded-full bg-gradient-to-r from-primary to-[#D84241] text-base shadow-md hover:opacity-90"
+                  disabled={submitting}
+                  className="mt-6 h-12 w-full rounded-full bg-gradient-to-r from-primary to-[#D84241] text-base shadow-md hover:opacity-90 disabled:opacity-60"
                 >
-                  Get my proposal
-                  <ArrowRight className="ml-1.5 h-4 w-4" />
+                  {submitting ? 'Sending…' : 'Get my proposal'}
+                  {!submitting && <ArrowRight className="ml-1.5 h-4 w-4" />}
                 </Button>
 
                 <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
@@ -361,7 +388,7 @@ export function PartnerDetail() {
               <div>
                 <h3 className="text-lg font-bold">Still have questions?</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Read the FAQ — questions from campus admins, answered.
+                  Read the FAQ, questions from campus admins, answered.
                 </p>
               </div>
               <Button asChild variant="outline" className="rounded-full px-6">

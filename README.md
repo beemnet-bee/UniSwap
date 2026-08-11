@@ -4,7 +4,7 @@ A multi-page marketing website for **UniSWAP**, a verified student marketplace f
 
 Built with **Next.js 16** (App Router), **TypeScript**, **Tailwind CSS 4**, **shadcn/ui**, **Framer Motion**, and **Space Grotesk**.
 
-## Pages (8 routes)
+## Pages (10 routes)
 
 | Route | Description |
 |-------|-------------|
@@ -16,6 +16,8 @@ Built with **Next.js 16** (App Router), **TypeScript**, **Tailwind CSS 4**, **sh
 | `/team` | 3 team members (Suong Tran, Suneha Shelke, Nikhil Shelke) + open roles |
 | `/faq` | 6-question accordion + contact options |
 | `/partner` | Proposal form (7 fields) + benefits + 4-week rollout timeline |
+| `/admin/login` | Admin login (password gate) |
+| `/admin` | Admin dashboard — stats, messages, settings |
 
 ## Getting Started
 
@@ -42,6 +44,44 @@ This project is configured for Vercel out of the box:
 **Output directory:** `.next` (handled automatically by Vercel)
 
 > **Note:** Do NOT use `output: "standalone"` in `next.config.ts` when deploying to Vercel. Vercel handles the output natively. The standalone mode is only for self-hosting (Docker/Node server).
+
+## Admin Dashboard
+
+The site includes a full admin dashboard at `/admin` for managing contact form submissions and team chat.
+
+### Default credentials (3 admins)
+| Username | Password | Email |
+|----------|----------|-------|
+| `admin1` | `admin1@uniswap` | admin1@uniswap.app |
+| `admin2` | `admin2@uniswap` | admin2@uniswap.app |
+| `admin3` | `admin3@uniswap` | admin3@uniswap.app |
+
+- **Login URL:** `/admin/login` (requires username + password)
+- Change your own password in **Settings** tab after login.
+
+### Features
+- **Dashboard tab:** Total views, total messages, unread count, replied count, views-by-page bar chart, recent messages list (shows which admin replied)
+- **Messages tab:** Search/filter contact submissions, mark as read, write & save replies (tracks which admin replied), delete messages, open in email client
+- **Team Chat tab:** Global chat for all 3 admins — messages appear in real-time (polling every 3s), each admin's messages are color-coded, delete your own messages
+- **Settings tab:** Each admin changes their own email and password (per-admin, not shared)
+
+### How it works
+- Contact form submissions on `/partner` are saved to the database (no SMTP needed)
+- Admin authenticates with username + password → httpOnly cookie (7-day expiry)
+- Page views are tracked automatically via `/api/track` (excludes `/admin` and `/api` routes)
+- All admin API endpoints require valid authentication
+- Chat messages are visible to all 3 admins — any sent message or reply appears on all dashboards
+- Each admin's settings (email, password) are their own — changing your password doesn't affect other admins
+
+### Database setup
+Uses SQLite via Prisma. On first run:
+```bash
+bun run db:push    # Create the schema
+bun run seed       # Seed the 3 default admins
+```
+The database file is created at `db/custom.db`.
+
+> **Vercel note:** SQLite uses the local filesystem, which is read-only on Vercel serverless functions. For production on Vercel, switch to a hosted database (PostgreSQL via Prisma, PlanetScale, or Vercel Postgres). Update `prisma/schema.prisma` `datasource db` provider and `DATABASE_URL` env var accordingly. For local development or self-hosting, SQLite works perfectly.
 
 ## Tech Stack
 

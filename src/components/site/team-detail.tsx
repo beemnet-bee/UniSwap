@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Reveal } from '@/components/motion-primitives'
 import { cn } from '@/lib/utils'
+import { team } from '@/lib/site-content'
 import {
   Leaf,
   Palette,
@@ -17,51 +18,9 @@ import {
   Sparkles,
   Megaphone,
   MapPin,
+  User,
+  ExternalLink,
 } from 'lucide-react'
-
-type Member = {
-  name: string
-  role: string
-  subrole: string
-  bio: string
-  image: string
-  icon: typeof Leaf
-  accent: 'blue' | 'red'
-  school: string
-}
-
-const founders: Member[] = [
-  {
-    name: 'Suong Tran',
-    role: 'Co-Founder',
-    subrole: 'Sustainability & Outreach Lead',
-    bio: 'Leads sustainability partnerships and campus outreach. Works directly with student affairs and sustainability offices to align UniSWAP with each campus\'s waste-reduction goals and reporting needs.',
-    image: '/team/suong-tran.png',
-    icon: Leaf,
-    accent: 'blue',
-    school: 'CWRU',
-  },
-  {
-    name: 'Suneha Shelke',
-    role: 'Co-Founder',
-    subrole: 'Design & Strategy Lead',
-    bio: 'Owns product design and brand strategy. Shapes the UniSWAP experience to feel welcoming, safe, and genuinely fun — making reuse the obvious choice for students.',
-    image: '/team/suneha-shelke.png',
-    icon: Palette,
-    accent: 'red',
-    school: 'CWRU',
-  },
-  {
-    name: 'Nikhil Shelke',
-    role: 'App Developer',
-    subrole: 'Engineering',
-    bio: 'Builds and ships the UniSWAP app — verification flow, real-time messaging, swap tracking, and the dashboard. Believes good software makes good behavior easy.',
-    image: '/team/nikhil-shelke.png',
-    icon: Code2,
-    accent: 'blue',
-    school: 'CWRU',
-  },
-]
 
 const openRoles = [
   {
@@ -83,7 +42,7 @@ const openRoles = [
 export function TeamDetail() {
   return (
     <>
-      {/* Founders — big cards with photos */}
+      {/* Founders with real photos and LinkedIn */}
       <section className="relative py-16 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12 max-w-2xl">
@@ -91,15 +50,15 @@ export function TeamDetail() {
               The team building UniSWAP.
             </h2>
             <p className="mt-3 text-base text-muted-foreground">
-              UniSWAP was created by college students who noticed unsustainable
-              consumption trends on their campus. Together they built a
-              technical solution to the root of this problem while emphasizing
-              student safety and experience.
+              UniSWAP was created by students who noticed unsustainable
+              consumption trends on campus. Together they built a technical
+              solution to the root of this problem while emphasizing student
+              safety and experience.
             </p>
           </Reveal>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {founders.map((m, i) => (
+            {team.map((m, i) => (
               <motion.article
                 key={m.name}
                 initial={{ opacity: 0, y: 30 }}
@@ -117,7 +76,7 @@ export function TeamDetail() {
                   )}
                 />
 
-                {/* Photo */}
+                {/* Photo or placeholder */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-muted to-secondary">
                   <div
                     className={cn(
@@ -128,15 +87,21 @@ export function TeamDetail() {
                     )}
                   />
                   <div className="absolute inset-0 grid place-items-center">
-                    <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-background shadow-lg sm:h-36 sm:w-36">
-                      <Image
-                        src={m.image}
-                        alt={m.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 128px, 144px"
-                      />
-                    </div>
+                    {m.image ? (
+                      <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-background shadow-lg sm:h-36 sm:w-36">
+                        <Image
+                          src={m.image}
+                          alt={m.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 128px, 144px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="grid h-32 w-32 place-items-center rounded-full border-4 border-background bg-muted shadow-lg sm:h-36 sm:w-36">
+                        <User className="h-16 w-16 text-muted-foreground" strokeWidth={1.5} />
+                      </div>
+                    )}
                   </div>
                   {/* role badge */}
                   <div className="absolute left-4 top-4">
@@ -175,12 +140,29 @@ export function TeamDetail() {
 
                   {/* socials */}
                   <div className="mt-5 flex items-center gap-2 border-t border-border pt-4">
-                    <span className="grid h-8 w-8 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                    <a
+                      href={m.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="grid h-8 w-8 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                      aria-label={`${m.name} on LinkedIn`}
+                    >
                       <Linkedin className="h-3.5 w-3.5" />
-                    </span>
-                    <span className="grid h-8 w-8 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:border-[#D84241] hover:text-[#D84241]">
-                      <Mail className="h-3.5 w-3.5" />
-                    </span>
+                    </a>
+                    {m.email && (
+                      <a
+                        href={`mailto:${m.email}`}
+                        className="grid h-8 w-8 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:border-[#D84241] hover:text-[#D84241]"
+                        aria-label={`Email ${m.name}`}
+                      >
+                        <Mail className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                    {m.image === null && (
+                      <span className="ml-auto text-[10px] italic text-muted-foreground">
+                        Photo coming soon
+                      </span>
+                    )}
                   </div>
                 </div>
               </motion.article>
@@ -195,20 +177,20 @@ export function TeamDetail() {
                 How it started
               </p>
               <p className="mt-3 max-w-3xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                &ldquo;UniSWAP was created by college students that noticed
+                &ldquo;UniSWAP was created by college students who noticed
                 unsustainable consumption trends on their campus. Together they
                 built a technical solution to the root of this problem while
                 emphasizing student safety and experience.&rdquo;
               </p>
               <p className="mt-3 text-xs text-muted-foreground/70">
-                — from the UniSWAP project brief
+                from the UniSWAP project brief
               </p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Join the team — open roles */}
+      {/* Join the team with working links */}
       <section className="relative border-y border-border/60 bg-card/30 py-20 lg:py-28">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute left-1/3 top-10 h-72 w-72 rounded-full bg-primary/10 blur-[120px]" />
@@ -261,7 +243,7 @@ export function TeamDetail() {
                   {r.description}
                 </p>
                 <Link
-                  href="/partner"
+                  href="/ambassador"
                   className={cn(
                     'relative mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors',
                     r.accent === 'blue' ? 'text-primary' : 'text-[#D84241]'
@@ -274,18 +256,18 @@ export function TeamDetail() {
             ))}
           </div>
 
-          {/* CTA to partner */}
+          {/* CTA to partner with working email link */}
           <Reveal delay={0.2} className="mt-12">
             <div className="flex flex-col items-center justify-between gap-4 rounded-3xl brand-gradient-surface p-7 text-white shadow-lg sm:flex-row sm:p-8">
               <div>
                 <h3 className="text-lg font-bold">Represent your campus.</h3>
                 <p className="mt-1 text-sm text-white/80">
-                  Become a UniSWAP ambassador — get early access, swag, and
+                  Become a UniSWAP ambassador. Get early access, swag, and
                   shape the product.
                 </p>
               </div>
               <Link
-                href="/partner"
+                href="/ambassador"
                 className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-foreground shadow-md transition-transform hover:scale-105"
               >
                 Become an ambassador

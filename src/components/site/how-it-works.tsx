@@ -27,14 +27,14 @@ export function HowItWorks() {
             <span className="uniswap-gradient-text">swap complete.</span>
           </h2>
           <p className="mt-5 text-base text-muted-foreground sm:text-lg">
-            No lengthy onboarding. No friction. Verify, post, chat, swap — most
+            No lengthy onboarding. No friction. Verify, post, chat, swap, most
             students finish their first swap in under a day.
           </p>
         </Reveal>
 
         {/* Steps with connecting line */}
         <div className="relative mt-20">
-          {/* desktop horizontal line — blue→red gradient */}
+          {/* desktop horizontal line, blue→red gradient */}
           <div
             className="absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent lg:block"
             aria-hidden

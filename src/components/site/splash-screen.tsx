@@ -12,7 +12,7 @@ export function SplashScreen() {
   const [done, setDone] = React.useState(false)
 
   React.useEffect(() => {
-    // Short splash for fast perceived load — just enough to brand the entry.
+    // Short splash for fast perceived load, just enough to brand the entry.
     const t = setTimeout(() => setDone(true), 1600)
     const onKey = () => setDone(true)
     window.addEventListener('keydown', onKey)

@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/site/page-header'
 import { FeaturesDetail } from '@/components/site/features-detail'
 
 export const metadata = {
-  title: 'Features — UniSWAP',
+  title: 'Features, UniSWAP',
   description:
     'Verified student accounts, real-time messaging, smart search, Lost & Found, SwapShop, limited-time deals, instant notifications, and safer-by-design. Everything a student needs to swap smarter.',
 }
@@ -18,7 +18,7 @@ export default function FeaturesPage() {
           eyebrow="Features"
           title="Everything a student needs to"
           highlight="swap smarter."
-          subtitle="From .edu verification to Lost & Found, UniSWAP ships with the tools students actually use — not a bolted-on checklist of half-baked ideas."
+          subtitle="From .edu verification to Lost & Found, UniSWAP ships with the tools students actually use, not a bolted-on checklist of half-baked ideas."
           crumbs={[{ label: 'Features' }]}
           accent="blue"
         />

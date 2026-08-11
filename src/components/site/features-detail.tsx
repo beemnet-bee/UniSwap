@@ -116,14 +116,14 @@ export function FeaturesDetail() {
                     {row.us ? (
                       <CheckCircle2 className="mx-auto h-5 w-5 text-primary" />
                     ) : (
-                      <span className="text-muted-foreground">—</span>
+                      <span className="text-muted-foreground">.</span>
                     )}
                   </div>
                   <div className="p-4 text-center">
                     {row.them ? (
                       <CheckCircle2 className="mx-auto h-5 w-5 text-muted-foreground" />
                     ) : (
-                      <span className="text-muted-foreground">—</span>
+                      <span className="text-muted-foreground">.</span>
                     )}
                   </div>
                 </motion.div>

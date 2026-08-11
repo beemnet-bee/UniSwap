@@ -5,7 +5,7 @@ import { AboutDetail } from '@/components/site/about-detail'
 import { SchoolMarquee } from '@/components/site/school-marquee'
 
 export const metadata = {
-  title: 'About — UniSWAP',
+  title: 'About, UniSWAP',
   description:
     'UniSWAP was created by two college students who noticed unsustainable consumption trends on their campus. Read our story, mission, and vision.',
 }
@@ -19,7 +19,7 @@ export default function AboutPage() {
           eyebrow="About Us"
           title="We started UniSWAP because"
           highlight="campus waste is solvable."
-          subtitle="Every spring, millions of pounds of usable goods leave college dorms for the landfill. We are building the platform that catches them before they hit the curb — and gives students an easier, safer, more sustainable way to pass things along."
+          subtitle="Every spring, millions of pounds of usable goods leave college dorms for the landfill. We are building the platform that catches them before they hit the curb, and gives students an easier, safer, more sustainable way to pass things along."
           crumbs={[{ label: 'About' }]}
           accent="blue"
         />

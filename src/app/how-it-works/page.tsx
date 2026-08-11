@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/site/page-header'
 import { HowItWorksDetail } from '@/components/site/how-it-works-detail'
 
 export const metadata = {
-  title: 'How It Works — UniSWAP',
+  title: 'How It Works, UniSWAP',
   description:
     'Four steps from sign-up to swap complete: verify your .edu, browse or post items, chat with other students, meet up and swap. Most students finish their first swap in under a day.',
 }
@@ -18,7 +18,7 @@ export default function HowItWorksPage() {
           eyebrow="How It Works"
           title="Four steps from sign-up to"
           highlight="swap complete."
-          subtitle="No lengthy onboarding. No friction. Verify, post, chat, swap — most students finish their first swap in under a day."
+          subtitle="No lengthy onboarding. No friction. Verify, post, chat, swap, most students finish their first swap in under a day."
           crumbs={[{ label: 'How It Works' }]}
           accent="red"
         />

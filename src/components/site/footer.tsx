@@ -9,15 +9,13 @@ import {
   Instagram,
   Twitter,
   Linkedin,
-  Github,
   ArrowUpRight,
 } from 'lucide-react'
 
 const socials = [
+  { icon: Linkedin, href: 'https://www.linkedin.com/company/109307417/admin/dashboard/', label: 'LinkedIn' },
   { icon: Instagram, href: '#', label: 'Instagram' },
   { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Github, href: '#', label: 'GitHub' },
 ]
 
 const footerNav = [
@@ -42,10 +40,10 @@ const footerNav = [
   {
     title: 'Resources',
     links: [
-      { label: 'Student safety', href: '#' },
-      { label: 'Community guidelines', href: '#' },
-      { label: 'Privacy', href: '#' },
-      { label: 'Terms', href: '#' },
+      { label: 'Student safety guide', href: 'mailto:uniswap.app.team@gmail.com?subject=Student Safety Guide' },
+      { label: 'Community guidelines', href: 'mailto:uniswap.app.team@gmail.com?subject=Community Guidelines' },
+      { label: 'Privacy policy', href: 'mailto:uniswap.app.team@gmail.com?subject=Privacy Policy' },
+      { label: 'Terms of service', href: 'mailto:uniswap.app.team@gmail.com?subject=Terms of Service' },
     ],
   },
 ]
@@ -89,11 +87,11 @@ export function Footer() {
 
             <div className="mt-6 space-y-2 text-sm">
               <a
-                href="mailto:hello@uniswap.app"
+                href="mailto:uniswap.app.team@gmail.com"
                 className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary"
               >
                 <Mail className="h-4 w-4 text-primary" />
-                hello@uniswap.app
+                uniswap.app.team@gmail.com
               </a>
               <p className="inline-flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4 text-[#D84241]" />
@@ -108,10 +106,10 @@ export function Footer() {
               <p className="mt-1 text-sm">
                 Please contact{' '}
                 <a
-                  href="mailto:partners@uniswap.app"
+                  href="mailto:uniswap.app.team@gmail.com"
                   className="font-medium text-[#D84241] underline-offset-2 hover:underline"
                 >
-                  partners@uniswap.app
+                  uniswap.app.team@gmail.com
                 </a>{' '}
                 for institution-specific pricing.
               </p>
@@ -140,17 +138,30 @@ export function Footer() {
                   {col.title}
                 </p>
                 <ul className="mt-4 space-y-3 text-sm">
-                  {col.links.map((l) => (
-                    <li key={l.label}>
-                      <Link
-                        href={l.href}
-                        className="group inline-flex items-center gap-1 text-foreground/80 transition-colors hover:text-primary"
-                      >
-                        {l.label}
-                        <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                      </Link>
-                    </li>
-                  ))}
+                  {col.links.map((l) => {
+                    const isExternal = l.href.startsWith('mailto:') || l.href.startsWith('http')
+                    return (
+                      <li key={l.label}>
+                        {isExternal ? (
+                          <a
+                            href={l.href}
+                            className="group inline-flex items-center gap-1 text-foreground/80 transition-colors hover:text-primary"
+                          >
+                            {l.label}
+                            <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                          </a>
+                        ) : (
+                          <Link
+                            href={l.href}
+                            className="group inline-flex items-center gap-1 text-foreground/80 transition-colors hover:text-primary"
+                          >
+                            {l.label}
+                            <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                          </Link>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             ))}
@@ -169,7 +180,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/team"
+                    href="/ambassador"
                     className="text-foreground/80 transition-colors hover:text-[#D84241]"
                   >
                     Become ambassador
@@ -181,6 +192,14 @@ export function Footer() {
                     className="text-foreground/80 transition-colors hover:text-[#D84241]"
                   >
                     Read FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/admin"
+                    className="text-foreground/80 transition-colors hover:text-[#D84241]"
+                  >
+                    Admin
                   </Link>
                 </li>
               </ul>

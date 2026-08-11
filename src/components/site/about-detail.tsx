@@ -11,21 +11,21 @@ const blocks = [
     icon: Leaf,
     eyebrow: 'Our story',
     title: 'Two students. One dumpster too many.',
-    body: 'UniSWAP was created by two college students who noticed unsustainable consumption trends on their campus — piles of perfectly good furniture, textbooks, and electronics hauled to the curb at the end of every semester. Together they built a technical solution to the root of this problem, while emphasizing student safety and experience along the way.',
+    body: 'UniSWAP was created by two college students who noticed unsustainable consumption trends on their campus: piles of perfectly good furniture, textbooks, and electronics hauled to the curb at the end of every semester. Together they built a technical solution to the root of this problem, while emphasizing student safety and experience along the way.',
     accent: 'blue' as const,
   },
   {
     icon: Target,
     eyebrow: 'Our mission',
-    title: 'Make the second-hand choice the easy one.',
-    body: 'Our mission is to provide a platform that makes it easier for students to choose second-hand exchange and more sustainable consumption practices. Swap instead of buy. Find instead of replace. Reuse instead of discard — without giving up convenience, safety, or your time.',
+    title: 'Make the second-hand choice the first one.',
+    body: 'Our mission is to provide a platform that makes it easier for students to choose second-hand exchange and more sustainable consumption practices. Buy, sell, or swap instead of buying new. Find instead of replace. Reuse instead of discard, without giving up convenience, safety, or your time.',
     accent: 'red' as const,
   },
   {
     icon: Telescope,
     eyebrow: 'Our vision',
     title: 'Circular consumption on every campus.',
-    body: 'We envision circular consumption models established across college campuses worldwide — where reusing goods is the default, where move-out week no longer means a wave of waste, and where every campus is a self-sustaining loop of stuff moving from student to student instead of student to landfill.',
+    body: 'We envision circular consumption models established across college campuses worldwide, where reusing goods is the default, where move-out week no longer means a wave of waste, and where every campus is a self-sustaining loop of stuff moving from student to student instead of student to landfill.',
     accent: 'blue' as const,
   },
 ]
@@ -33,7 +33,7 @@ const blocks = [
 export function AboutDetail() {
   return (
     <>
-      {/* Story / Mission / Vision — full width detail blocks */}
+      {/* Story / Mission / Vision, full width detail blocks */}
       <section className="relative py-16 lg:py-24">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-8">
@@ -102,7 +102,7 @@ export function AboutDetail() {
             </h2>
             <p className="mt-5 text-base text-muted-foreground sm:text-lg">
               Colleges generate up to 200+ tons of solid waste during move-out
-              alone. Up to 70% of it is reusable — yet most of it ends up in a
+              alone. Up to 70% of it is reusable, yet most of it ends up in a
               landfill. We are building the tool that catches it first.
             </p>
           </Reveal>

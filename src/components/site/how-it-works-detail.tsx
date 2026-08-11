@@ -10,7 +10,7 @@ import { ArrowRight, GraduationCap, Search, MessagesSquare, HandHeart } from 'lu
 export function HowItWorksDetail() {
   return (
     <>
-      {/* Steps — alternating left/right (zigzag) timeline */}
+      {/* Steps, alternating left/right (zigzag) timeline */}
       <section className="relative py-16 lg:py-24">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="relative">
@@ -32,7 +32,7 @@ export function HowItWorksDetail() {
                       'relative pl-20 lg:grid lg:grid-cols-2 lg:items-center lg:gap-12 lg:pl-0',
                     )}
                   >
-                    {/* number badge on the line — centered on desktop */}
+                    {/* number badge on the line, centered on desktop */}
                     <div className="absolute left-0 top-0 z-10 lg:left-1/2 lg:-translate-x-1/2">
                       <motion.div
                         whileHover={{ scale: 1.08, rotate: 5 }}
@@ -51,7 +51,7 @@ export function HowItWorksDetail() {
                       </motion.div>
                     </div>
 
-                    {/* Content card — alternates left/right on desktop */}
+                    {/* Content card, alternates left/right on desktop */}
                     {isLeft ? (
                       <>
                         {/* Left content, empty right */}
@@ -93,8 +93,8 @@ export function HowItWorksDetail() {
           <div className="mt-14 grid gap-5 sm:grid-cols-2">
             {[
               { icon: GraduationCap, title: 'A current .edu email', body: 'Your university email is your ticket in. We confirm it is active and tied to a current student record before you can post or message.' },
-              { icon: Search, title: 'A photo of your item', body: 'One clear photo is enough to list. Add a condition note and a category — most listings take under 30 seconds to create.' },
-              { icon: MessagesSquare, title: 'A meetup spot on campus', body: 'Pick a public spot — library, student center, dining hall. We recommend on-campus meetups for everyone\'s safety.' },
+              { icon: Search, title: 'A photo of your item', body: 'One clear photo is enough to list. Add a condition note and a category, most listings take under 30 seconds to create.' },
+              { icon: MessagesSquare, title: 'A meetup spot on campus', body: 'Pick a public spot, library, student center, dining hall. We recommend on-campus meetups for everyone\'s safety.' },
               { icon: HandHeart, title: 'An open mind', body: 'You do not have to buy. You can swap. Trade a lamp for a textbook, a kettle for a bike lock. Money is optional on UniSWAP.' },
             ].map((item, i) => (
               <motion.div
