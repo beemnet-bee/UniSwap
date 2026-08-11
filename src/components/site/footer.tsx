@@ -40,10 +40,10 @@ const footerNav = [
   {
     title: 'Resources',
     links: [
-      { label: 'Student safety guide', href: 'mailto:uniswap.app.team@gmail.com?subject=Student Safety Guide' },
-      { label: 'Community guidelines', href: 'mailto:uniswap.app.team@gmail.com?subject=Community Guidelines' },
-      { label: 'Privacy policy', href: 'mailto:uniswap.app.team@gmail.com?subject=Privacy Policy' },
-      { label: 'Terms of service', href: 'mailto:uniswap.app.team@gmail.com?subject=Terms of Service' },
+      { label: 'Student safety guide', href: '/safety' },
+      { label: 'Community guidelines', href: '/guidelines' },
+      { label: 'Privacy policy', href: '/privacy' },
+      { label: 'Terms of service', href: '/terms' },
     ],
   },
 ]

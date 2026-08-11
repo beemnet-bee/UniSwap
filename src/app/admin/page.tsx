@@ -989,7 +989,7 @@ function MessageDetailModal({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="modal-scroll relative max-h-[90vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden rounded-3xl border border-border bg-background shadow-2xl"
+        className="modal-scroll relative max-h-[90vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden rounded-3xl border border-border bg-background pr-1 shadow-2xl"
       >
         {/* header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background px-6 py-4">

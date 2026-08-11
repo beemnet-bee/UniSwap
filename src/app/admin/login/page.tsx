@@ -152,16 +152,38 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {/* Remember me */}
-          <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 rounded border-border accent-[#2B8FB9]"
-            />
+          {/* Remember me - custom checkbox */}
+          <button
+            type="button"
+            onClick={() => setRememberMe(!rememberMe)}
+            className="mt-4 flex cursor-pointer items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span
+              className={`relative grid h-5 w-5 place-items-center rounded-md border-2 transition-all ${
+                rememberMe
+                  ? 'border-transparent bg-gradient-to-br from-primary to-[#D84241]'
+                  : 'border-border bg-background'
+              }`}
+            >
+              {rememberMe && (
+                <motion.svg
+                  initial={{ scale: 0, rotate: -45 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  viewBox="0 0 24 24"
+                  className="h-3.5 w-3.5 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </motion.svg>
+              )}
+            </span>
             Remember me on this device
-          </label>
+          </button>
 
           <Button
             type="submit"

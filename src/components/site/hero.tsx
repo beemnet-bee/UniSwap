@@ -351,14 +351,16 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
         className="relative z-10"
         whileHover={{ y: -6, rotate: 0.5 }}
       >
-        <div className="relative h-[36rem] w-[17.5rem] rounded-[2.5rem] border-[5px] border-zinc-900 bg-zinc-900 p-[3px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)_inset] sm:h-[38rem] sm:w-[18.5rem] dark:border-zinc-800">
-          {/* Dynamic island */}
-          <div className="absolute left-1/2 top-2 z-30 flex h-7 w-24 -translate-x-1/2 items-center justify-center gap-1.5 rounded-full bg-black">
+        <div className="relative h-[36rem] w-[17.5rem] rounded-[3rem] bg-gradient-to-b from-zinc-800 to-zinc-950 p-[4px] shadow-[0_25px_80px_-20px_rgba(0,0,0,0.6),0_0_0_2px_rgba(255,255,255,0.05)_inset,0_-2px_8px_rgba(0,0,0,0.4)_inset] sm:h-[38rem] sm:w-[18.5rem]">
+          {/* Titanium frame highlight */}
+          <div className="pointer-events-none absolute inset-0 rounded-[3rem] bg-gradient-to-br from-white/10 via-transparent to-white/5" />
+          {/* Dynamic Island */}
+          <div className="absolute left-1/2 top-3 z-30 flex h-7 w-24 -translate-x-1/2 items-center justify-center gap-1.5 rounded-full bg-black ring-1 ring-zinc-800">
             <div className="h-1.5 w-1.5 rounded-full bg-zinc-700" />
             <div className="h-1 w-8 rounded-full bg-zinc-800" />
           </div>
           {/* screen */}
-          <div className="relative h-full w-full overflow-hidden rounded-[2.2rem] bg-[#F3F4F6]">
+          <div className="relative h-full w-full overflow-hidden rounded-[2.6rem] bg-[#F3F4F6]">
             {/* Custom animated app screens */}
             <AnimatePresence mode="wait">
               {screen === 'home' && <HomeScreen key="home" />}
@@ -366,11 +368,11 @@ function PhoneMockup({ reduce }: { reduce: boolean }) {
               {screen === 'map' && <MapScreen key="map" />}
             </AnimatePresence>
           </div>
-          {/* Side buttons (volume + power) */}
-          <div className="absolute -left-[3px] top-24 h-8 w-[3px] rounded-l bg-zinc-700" />
-          <div className="absolute -left-[3px] top-36 h-12 w-[3px] rounded-l bg-zinc-700" />
-          <div className="absolute -left-[3px] top-52 h-12 w-[3px] rounded-l bg-zinc-700" />
-          <div className="absolute -right-[3px] top-32 h-16 w-[3px] rounded-r bg-zinc-700" />
+          {/* Side buttons - realistic */}
+          <div className="absolute -left-[2px] top-24 h-7 w-[3px] rounded-l-sm bg-gradient-to-b from-zinc-600 to-zinc-800" />
+          <div className="absolute -left-[2px] top-36 h-10 w-[3px] rounded-l-sm bg-gradient-to-b from-zinc-600 to-zinc-800" />
+          <div className="absolute -left-[2px] top-50 h-10 w-[3px] rounded-l-sm bg-gradient-to-b from-zinc-600 to-zinc-800" />
+          <div className="absolute -right-[2px] top-32 h-14 w-[3px] rounded-r-sm bg-gradient-to-b from-zinc-600 to-zinc-800" />
         </div>
       </motion.div>
 
