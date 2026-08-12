@@ -29,6 +29,7 @@ import {
   MessageSquare,
   Smile,
   CornerUpLeft,
+  BarChart3,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -56,6 +57,12 @@ type Stats = {
   }[]
   totalChats: number
   currentUser: string
+  viewsOverTime?: {
+    daily: { label: string; count: number }[]
+    monthly: { label: string; count: number }[]
+    semi: { label: string; count: number }[]
+    yearly: { label: string; count: number }[]
+  }
 }
 
 type Message = {
@@ -740,6 +747,11 @@ function DashboardTab({
         )}
       </div>
 
+      {/* Views Over Time Chart */}
+      {stats.viewsOverTime && (
+        <ViewsOverTimeChart data={stats.viewsOverTime} />
+      )}
+
       {/* Recent messages */}
       <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
@@ -789,6 +801,110 @@ function DashboardTab({
             ))}
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/* Views Over Time Chart                                               */
+/* ------------------------------------------------------------------ */
+
+type TimeRange = 'daily' | 'monthly' | 'semi' | 'yearly'
+
+function ViewsOverTimeChart({
+  data,
+}: {
+  data: {
+    daily: { label: string; count: number }[]
+    monthly: { label: string; count: number }[]
+    semi: { label: string; count: number }[]
+    yearly: { label: string; count: number }[]
+  }
+}) {
+  const [range, setRange] = React.useState<TimeRange>('daily')
+
+  const rangeLabels: Record<TimeRange, string> = {
+    daily: 'Daily (7 days)',
+    monthly: 'Monthly (6 months)',
+    semi: 'Semi-annual (2 years)',
+    yearly: 'Yearly (3 years)',
+  }
+
+  const currentData = data[range]
+  const maxCount = Math.max(...currentData.map((d) => d.count), 1)
+
+  return (
+    <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="h-4 w-4 text-primary" />
+          <h2 className="text-base font-bold tracking-tight">Views Over Time</h2>
+        </div>
+        {/* Range selector */}
+        <div className="flex gap-1 rounded-xl bg-muted p-1">
+          {(['daily', 'monthly', 'semi', 'yearly'] as const).map((r) => (
+            <button
+              key={r}
+              onClick={() => setRange(r)}
+              className={cn(
+                'rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors',
+                range === r
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              {r === 'semi' ? 'Semi' : r}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chart */}
+      <div className="flex h-48 items-end justify-between gap-2 sm:gap-3">
+        {currentData.map((item, i) => {
+          const heightPct = (item.count / maxCount) * 100
+          return (
+            <div key={i} className="group flex flex-1 flex-col items-center gap-2">
+              {/* Bar */}
+              <div className="relative flex w-full flex-1 items-end justify-center">
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: `${Math.max(heightPct, 2)}%` }}
+                  transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                  className={cn(
+                    'relative w-full max-w-[2.5rem] rounded-t-lg transition-colors',
+                    range === 'daily'
+                      ? 'bg-gradient-to-t from-primary to-[#67B0C3]'
+                      : range === 'monthly'
+                      ? 'bg-gradient-to-t from-[#2B8FB9] to-[#67B0C3]'
+                      : range === 'semi'
+                      ? 'bg-gradient-to-t from-[#67B0C3] to-[#D84241]'
+                      : 'bg-gradient-to-t from-[#D84241] to-[#67B0C3]'
+                  )}
+                >
+                  {/* Tooltip on hover */}
+                  <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-lg bg-foreground px-2 py-1 text-[10px] font-bold text-background opacity-0 transition-opacity group-hover:opacity-100">
+                    {item.count}
+                  </div>
+                </motion.div>
+              </div>
+              {/* Label */}
+              <span className="text-[10px] font-medium text-muted-foreground">
+                {item.label}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Summary line */}
+      <div className="mt-4 border-t border-border pt-3 text-center">
+        <span className="text-xs text-muted-foreground">{rangeLabels[range]}</span>
+        <span className="mx-2 text-muted-foreground/30">|</span>
+        <span className="text-xs font-semibold text-foreground">
+          Total: {currentData.reduce((sum, d) => sum + d.count, 0)} views
+        </span>
       </div>
     </div>
   )
