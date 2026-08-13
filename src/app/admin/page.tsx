@@ -30,6 +30,9 @@ import {
   Smile,
   CornerUpLeft,
   BarChart3,
+  Pencil,
+  Check,
+  Paperclip,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -85,7 +88,16 @@ type ChatMessage = {
   id: string
   username: string
   message: string
+  editedAt: string | null
+  replyToId: string | null
+  replyToUsername: string | null
+  replyToMessage: string | null
+  attachment: string | null
+  attachmentName: string | null
+  attachmentType: string | null
   createdAt: string
+  reactions: { id: string; username: string; emoji: string }[]
+  seenBy: string[]
 }
 
 type Tab = 'dashboard' | 'messages' | 'chat' | 'settings'
@@ -109,6 +121,10 @@ export default function AdminPage() {
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([])
   const [chatInput, setChatInput] = React.useState('')
   const [chatSending, setChatSending] = React.useState(false)
+  const [chatReplyTo, setChatReplyTo] = React.useState<ChatMessage | null>(null)
+  const [chatEditing, setChatEditing] = React.useState<ChatMessage | null>(null)
+  const [retentionDays, setRetentionDays] = React.useState(7)
+  const [chatAttachment, setChatAttachment] = React.useState<{ data: string; name: string; type: string } | null>(null)
   const chatEndRef = React.useRef<HTMLDivElement>(null)
   const lastChatIdRef = React.useRef<string | null>(null)
 
@@ -202,15 +218,47 @@ export default function AdminPage() {
   }, [chatMessages, tab])
 
   const sendChat = async () => {
-    if (!chatInput.trim() || chatSending) return
+    if (chatSending) return
+    if (!chatInput.trim() && !chatAttachment) return
+
+    // Handle editing
+    if (chatEditing) {
+      try {
+        setChatSending(true)
+        const res = await fetch('/api/admin/chat', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: chatEditing.id, action: 'edit', message: chatInput }),
+        })
+        if (!res.ok) throw new Error('Failed to edit')
+        setChatMessages((prev) =>
+          prev.map((m) => m.id === chatEditing.id ? { ...m, message: chatInput, editedAt: new Date().toISOString() } : m)
+        )
+        setChatEditing(null)
+        setChatInput('')
+      } catch {
+        toast({ title: 'Failed to edit', variant: 'destructive' })
+      } finally {
+        setChatSending(false)
+      }
+      return
+    }
+
     const text = chatInput.trim()
     setChatInput('')
     setChatSending(true)
     try {
+      const body: Record<string, unknown> = { message: text }
+      if (chatReplyTo) body.replyToId = chatReplyTo.id
+      if (chatAttachment) {
+        body.attachment = chatAttachment.data
+        body.attachmentName = chatAttachment.name
+        body.attachmentType = chatAttachment.type
+      }
       const res = await fetch('/api/admin/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify(body),
       })
       if (!res.ok) throw new Error('Failed to send')
       const data = await res.json()
@@ -218,16 +266,71 @@ export default function AdminPage() {
         setChatMessages((prev) => [...prev, data.message])
         lastChatIdRef.current = data.message.id
       }
+      setChatReplyTo(null)
+      setChatAttachment(null)
     } catch {
-      toast({
-        title: 'Failed to send message',
-        description: 'Please try again.',
-        variant: 'destructive',
-      })
-      setChatInput(text) // restore on failure
+      toast({ title: 'Failed to send message', variant: 'destructive' })
+      setChatInput(text)
     } finally {
       setChatSending(false)
     }
+  }
+
+  const editChat = (msg: ChatMessage) => {
+    setChatEditing(msg)
+    setChatInput(msg.message)
+    setChatReplyTo(null)
+  }
+
+  const reactToChat = async (chatId: string, emoji: string) => {
+    try {
+      await fetch('/api/admin/chat', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: chatId, action: 'react', emoji }),
+      })
+      // Update local state
+      setChatMessages((prev) =>
+        prev.map((m) => {
+          if (m.id !== chatId) return m
+          const existing = m.reactions.find((r) => r.username === currentUser && r.emoji === emoji)
+          if (existing) {
+            return { ...m, reactions: m.reactions.filter((r) => r.id !== existing.id) }
+          }
+          return { ...m, reactions: [...m.reactions, { id: Date.now().toString(), username: currentUser, emoji }] }
+        })
+      )
+    } catch {
+      // silently fail
+    }
+  }
+
+  const updateRetention = async (days: number) => {
+    try {
+      const res = await fetch('/api/admin/chat', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'setRetention', days }),
+      })
+      if (res.ok) {
+        setRetentionDays(days)
+        toast({ title: `Messages older than ${days} days will be auto-deleted` })
+      }
+    } catch {
+      toast({ title: 'Failed to update', variant: 'destructive' })
+    }
+  }
+
+  const handleFileUpload = (file: File) => {
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: 'File too large', description: 'Max 2MB for chat attachments.', variant: 'destructive' })
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      setChatAttachment({ data: reader.result as string, name: file.name, type: file.type })
+    }
+    reader.readAsDataURL(file)
   }
 
   const deleteChat = async (id: string) => {
@@ -500,8 +603,20 @@ export default function AdminPage() {
                     setInput={setChatInput}
                     onSend={sendChat}
                     onDelete={deleteChat}
+                    onEdit={editChat}
+                    onReact={reactToChat}
+                    onReply={setChatReplyTo}
+                    replyTo={chatReplyTo}
+                    editing={chatEditing}
+                    onCancelReply={() => setChatReplyTo(null)}
+                    onCancelEdit={() => { setChatEditing(null); setChatInput('') }}
                     sending={chatSending}
                     chatEndRef={chatEndRef}
+                    retentionDays={retentionDays}
+                    setRetentionDays={updateRetention}
+                    attachment={chatAttachment}
+                    setAttachment={setChatAttachment}
+                    onFileUpload={handleFileUpload}
                   />
                 </motion.div>
               )}
@@ -1570,8 +1685,20 @@ function ChatTab({
   setInput,
   onSend,
   onDelete,
+  onEdit,
+  onReact,
+  onReply,
+  replyTo,
+  editing,
+  onCancelReply,
+  onCancelEdit,
   sending,
   chatEndRef,
+  retentionDays,
+  setRetentionDays,
+  attachment,
+  setAttachment,
+  onFileUpload,
 }: {
   messages: ChatMessage[]
   currentUser: string
@@ -1579,23 +1706,44 @@ function ChatTab({
   setInput: (s: string) => void
   onSend: () => void
   onDelete: (id: string) => void
+  onEdit: (msg: ChatMessage) => void
+  onReact: (chatId: string, emoji: string) => void
+  onReply: (msg: ChatMessage) => void
+  replyTo: ChatMessage | null
+  editing: ChatMessage | null
+  onCancelReply: () => void
+  onCancelEdit: () => void
   sending: boolean
   chatEndRef: React.RefObject<HTMLDivElement | null>
+  retentionDays: number
+  setRetentionDays: (days: number) => void
+  attachment: { data: string; name: string; type: string } | null
+  setAttachment: (v: { data: string; name: string; type: string } | null) => void
+  onFileUpload: (file: File) => void
 }) {
   const { toast } = useToast()
   const [contextMenu, setContextMenu] = React.useState<{ x: number; y: number; msgId: string } | null>(null)
   const [showReactions, setShowReactions] = React.useState(false)
+  const [showRetentionEdit, setShowRetentionEdit] = React.useState(false)
+  const [retentionInput, setRetentionInput] = React.useState(String(retentionDays))
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       onSend()
     }
+    if (e.key === 'Escape') {
+      if (editing) onCancelEdit()
+      if (replyTo) onCancelReply()
+    }
   }
 
   const handleContextMenu = (e: React.MouseEvent, msgId: string) => {
     e.preventDefault()
-    setContextMenu({ x: e.clientX, y: e.clientY, msgId })
+    const x = Math.min(e.clientX, (typeof window !== 'undefined' ? window.innerWidth : 999) - 260)
+    const y = Math.min(e.clientY, (typeof window !== 'undefined' ? window.innerHeight : 999) - 340)
+    setContextMenu({ x, y, msgId })
     setShowReactions(false)
   }
 
@@ -1608,36 +1756,69 @@ function ChatTab({
 
   return (
     <div className="space-y-4">
+      {/* Header with retention editor */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Team Chat</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Global chat for all 3 admins. Messages appear in real-time (polling every 3s).
+            Global chat for all 3 admins. Messages auto-delete after {retentionDays} days.
           </p>
         </div>
-        <div className="hidden items-center gap-2 rounded-full bg-muted px-3 py-1.5 sm:flex">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-          </span>
-          <span className="text-xs font-medium text-muted-foreground">
-            Signed in as <span className="text-foreground">{currentUser}</span>
-          </span>
+        <div className="relative">
+          {showRetentionEdit ? (
+            <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-2 shadow-md">
+              <input
+                type="number"
+                min="1"
+                max="365"
+                value={retentionInput}
+                onChange={(e) => setRetentionInput(e.target.value)}
+                className="w-16 rounded-lg border border-border bg-background px-2 py-1 text-sm"
+              />
+              <span className="text-xs text-muted-foreground">days</span>
+              <button
+                onClick={() => {
+                  const d = parseInt(retentionInput, 10)
+                  if (d >= 1 && d <= 365) {
+                    setRetentionDays(d)
+                    setShowRetentionEdit(false)
+                  }
+                }}
+                className="rounded-lg bg-gradient-to-r from-primary to-[#D84241] px-3 py-1 text-xs font-semibold text-white"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => { setShowRetentionEdit(false); setRetentionInput(String(retentionDays)) }}
+                className="rounded-lg border border-border px-2 py-1 text-xs"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowRetentionEdit(true)}
+              className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+            >
+              <Clock className="h-3.5 w-3.5" />
+              {retentionDays}d retention
+            </button>
+          )}
         </div>
       </div>
 
       {/* Chat container */}
       <div className="flex h-[60vh] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-        {/* Messages */}
-        <div className="chat-scroll flex-1 space-y-4 overflow-y-auto p-4 sm:p-6">
+        {/* Messages - no scrollbar class when empty */}
+        <div className={messages.length === 0 ? 'flex flex-1 flex-col items-center justify-center p-4 text-center' : 'chat-scroll flex-1 space-y-3 overflow-y-auto p-4 sm:p-6'}>
           {messages.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center text-center">
+            <>
               <MessageSquare className="h-12 w-12 text-muted-foreground/30" />
               <p className="mt-3 text-sm font-medium">No messages yet</p>
               <p className="text-xs text-muted-foreground">
                 Send the first message to start the conversation.
               </p>
-            </div>
+            </>
           ) : (
             messages.map((msg) => {
               const isMe = msg.username === currentUser
@@ -1647,58 +1828,68 @@ function ChatTab({
                   key={msg.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={cn(
-                    'group flex items-end gap-2.5',
-                    isMe && 'flex-row-reverse'
-                  )}
+                  className={cn('group flex items-end gap-2.5', isMe && 'flex-row-reverse')}
                 >
-                  {/* avatar */}
-                  <span
-                    className={cn(
-                      'grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white',
-                      gradient
-                    )}
-                  >
+                  <span className={cn('grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br text-xs font-bold text-white', gradient)}>
                     {msg.username.charAt(msg.username.length - 1)}
                   </span>
-                  {/* bubble */}
-                  <div
-                    className={cn('max-w-[75%]', isMe && 'items-end')}
-                    onContextMenu={(e) => handleContextMenu(e, msg.id)}
-                  >
-                    <div
-                      className={cn(
-                        'flex items-center gap-2 text-xs',
-                        isMe ? 'justify-end' : 'justify-start'
-                      )}
-                    >
-                      <span className="font-semibold text-foreground">
-                        {isMe ? 'You' : msg.username}
-                      </span>
+                  <div className={cn('max-w-[70%]', isMe && 'items-end')} onContextMenu={(e) => handleContextMenu(e, msg.id)}>
+                    {/* Reply quote */}
+                    {msg.replyToMessage && (
+                      <div className={cn('mb-1 rounded-lg border-l-2 border-primary/40 bg-muted/50 px-2.5 py-1 text-xs', isMe ? 'mr-1 text-right' : 'ml-1')}>
+                        <span className="font-semibold text-primary">{msg.replyToUsername}</span>
+                        <p className="text-muted-foreground line-clamp-1">{msg.replyToMessage}</p>
+                      </div>
+                    )}
+                    <div className={cn('flex items-center gap-2 text-xs', isMe ? 'justify-end' : 'justify-start')}>
+                      <span className="font-semibold text-foreground">{isMe ? 'You' : msg.username}</span>
                       <span className="text-muted-foreground">
-                        {new Date(msg.createdAt).toLocaleTimeString(undefined, {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
+                        {new Date(msg.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                       </span>
+                      {msg.editedAt && <span className="text-[9px] italic text-muted-foreground/60">edited</span>}
                     </div>
-                    <div
-                      className={cn(
-                        'mt-1 rounded-2xl px-4 py-2.5 text-sm',
-                        isMe
-                          ? 'rounded-br-sm bg-gradient-to-br from-primary to-[#D84241] text-white'
-                          : 'rounded-bl-sm bg-muted text-foreground'
+                    <div className={cn('mt-1 rounded-2xl px-4 py-2.5 text-sm', isMe ? 'rounded-br-sm bg-gradient-to-br from-primary to-[#D84241] text-white' : 'rounded-bl-sm bg-muted text-foreground')}>
+                      {msg.message && <p className="whitespace-pre-wrap break-words">{msg.message}</p>}
+                      {msg.attachment && (
+                        <div className="mt-2">
+                          {msg.attachmentType?.startsWith('image/') ? (
+                            <img src={msg.attachment} alt={msg.attachmentName || 'attachment'} className="max-w-full rounded-lg" style={{ maxHeight: '200px' }} />
+                          ) : (
+                            <a href={msg.attachment} download={msg.attachmentName || 'file'} className="flex items-center gap-2 rounded-lg bg-white/20 px-3 py-2 text-xs underline">
+                              <Paperclip className="h-3 w-3" />
+                              {msg.attachmentName || 'Download file'}
+                            </a>
+                          )}
+                        </div>
                       )}
-                    >
-                      <p className="whitespace-pre-wrap break-words">{msg.message}</p>
                     </div>
-                    {isMe && (
-                      <button
-                        onClick={() => onDelete(msg.id)}
-                        className="mt-1 ml-auto block text-[10px] text-muted-foreground opacity-0 transition-opacity hover:text-[#D84241] group-hover:opacity-100"
-                      >
-                        Delete
-                      </button>
+                    {/* Reactions */}
+                    {msg.reactions.length > 0 && (
+                      <div className={cn('mt-1 flex flex-wrap gap-1', isMe ? 'justify-end' : 'justify-start')}>
+                        {Object.entries(
+                          msg.reactions.reduce((acc, r) => {
+                            acc[r.emoji] = (acc[r.emoji] || 0) + 1
+                            return acc
+                          }, {} as Record<string, number>)
+                        ).map(([emoji, count]) => {
+                          const reactIcon = REACTIONS.find((r) => r.key === emoji)
+                          return (
+                            <button
+                              key={emoji}
+                              onClick={() => onReact(msg.id, emoji)}
+                              className="flex items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-bold transition-transform hover:scale-110"
+                            >
+                              {reactIcon && <reactIcon.icon className="h-3.5 w-3.5" />}
+                              {count}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                    {msg.seenBy.length > 1 && isMe && (
+                      <p className="mt-0.5 text-right text-[9px] text-muted-foreground/50">
+                        Seen by {msg.seenBy.filter((u) => u !== currentUser).join(', ')}
+                      </p>
                     )}
                   </div>
                 </motion.div>
@@ -1708,31 +1899,87 @@ function ChatTab({
           <div ref={chatEndRef} />
         </div>
 
+        {/* Reply / Edit banner */}
+        {(replyTo || editing) && (
+          <div className="flex items-center justify-between border-t border-border bg-muted/30 px-4 py-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {editing ? (
+                <>
+                  <Pencil className="h-3 w-3 text-primary" />
+                  Editing: <span className="font-medium text-foreground">{editing.message.slice(0, 50)}</span>
+                </>
+              ) : (
+                <>
+                  <CornerUpLeft className="h-3 w-3 text-primary" />
+                  Replying to <span className="font-medium text-foreground">{replyTo?.username}</span>: {replyTo?.message.slice(0, 50)}
+                </>
+              )}
+            </div>
+            <button onClick={() => { onCancelReply(); onCancelEdit() }} className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* Attachment preview */}
+        {attachment && (
+          <div className="flex items-center justify-between border-t border-border bg-muted/30 px-4 py-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Paperclip className="h-3 w-3 text-primary" />
+              {attachment.type.startsWith('image/') ? (
+                <img src={attachment.data} alt="preview" className="h-10 w-10 rounded object-cover" />
+              ) : (
+                <span className="font-medium text-foreground">{attachment.name}</span>
+              )}
+            </div>
+            <button onClick={() => setAttachment(null)} className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-[#D84241]">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+
         {/* Input */}
         <div className="border-t border-border bg-muted/30 p-3 sm:p-4">
           <div className="flex items-end gap-2">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-[#D84241] text-sm font-bold text-white">
               {currentUser.charAt(currentUser.length - 1)}
             </span>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) onFileUpload(file)
+                e.target.value = ''
+              }}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+              aria-label="Attach file"
+            >
+              <Paperclip className="h-4 w-4" />
+            </button>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Message all admins as ${currentUser}…`}
+              placeholder={editing ? 'Edit your message...' : `Message all admins as ${currentUser}...`}
               rows={1}
               className="max-h-32 min-h-[40px] flex-1 resize-none rounded-2xl border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none"
               disabled={sending}
             />
             <Button
               onClick={onSend}
-              disabled={sending || !input.trim()}
+              disabled={sending || (!input.trim() && !attachment)}
               className="h-10 shrink-0 rounded-full bg-gradient-to-r from-primary to-[#D84241] px-4 disabled:opacity-50"
             >
-              <Send className="h-4 w-4" />
+              {editing ? <Check className="h-4 w-4" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
           <p className="mt-1.5 text-center text-[10px] text-muted-foreground">
-            Press Enter to send. Shift+Enter for new line. Visible to all admins
+            Press Enter to send. Shift+Enter for new line. Esc to cancel. Visible to all admins. Auto-deletes after {retentionDays} days.
           </p>
         </div>
       </div>
@@ -1741,31 +1988,21 @@ function ChatTab({
       <AnimatePresence>
         {contextMenu && contextMenuMsg && (
           <>
-            {/* Click-away overlay */}
             <div className="fixed inset-0 z-40" onClick={closeContextMenu} onContextMenu={(e) => { e.preventDefault(); closeContextMenu() }} />
-
-            {/* Context menu */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.15 }}
               className="fixed z-50 min-w-48 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
-              style={{
-                left: Math.min(contextMenu.x, (typeof window !== 'undefined' ? window.innerWidth : 999) - 220),
-                top: Math.min(contextMenu.y, (typeof window !== 'undefined' ? window.innerHeight : 999) - 320),
-              }}
+              style={{ left: contextMenu.x, top: contextMenu.y }}
             >
-              {/* Reaction bar */}
               {showReactions ? (
-                <div className="flex gap-1 p-2">
+                <div className="flex flex-wrap gap-1 p-2" style={{ maxWidth: '240px' }}>
                   {REACTIONS.map((r) => (
                     <button
                       key={r.key}
-                      onClick={() => {
-                        toast({ title: `Reacted with ${r.label}` })
-                        closeContextMenu()
-                      }}
+                      onClick={() => { onReact(contextMenuMsg.id, r.key); closeContextMenu() }}
                       className="grid h-9 w-9 place-items-center rounded-full transition-transform hover:scale-125 hover:bg-muted"
                       title={r.label}
                     >
@@ -1775,46 +2012,23 @@ function ChatTab({
                 </div>
               ) : (
                 <div className="py-1">
-                  <button
-                    onClick={() => setShowReactions(true)}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    <Smile className="h-4 w-4 text-yellow-500" />
-                    React
+                  <button onClick={() => setShowReactions(true)} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+                    <Smile className="h-4 w-4 text-yellow-500" /> React
                   </button>
-                  <button
-                    onClick={() => {
-                      setInput(`> ${contextMenuMsg.message}\n\n`)
-                      closeContextMenu()
-                    }}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    <CornerUpLeft className="h-4 w-4 text-primary" />
-                    Reply
-                  </button>
-                  <button
-                    onClick={() => {
-                      toast({
-                        title: 'Seen by',
-                        description: 'All admins can see all messages in the global chat.',
-                      })
-                      closeContextMenu()
-                    }}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                    Seen by
+                  <button onClick={() => { onReply(contextMenuMsg); closeContextMenu() }} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+                    <CornerUpLeft className="h-4 w-4 text-primary" /> Reply
                   </button>
                   {contextMenuMsg.username === currentUser && (
-                    <button
-                      onClick={() => {
-                        onDelete(contextMenuMsg.id)
-                        closeContextMenu()
-                      }}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#D84241] transition-colors hover:bg-[#D84241]/10"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      Delete
+                    <button onClick={() => { onEdit(contextMenuMsg); closeContextMenu() }} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+                      <Pencil className="h-4 w-4 text-blue-500" /> Edit
+                    </button>
+                  )}
+                  <button onClick={() => { toast({ title: 'Seen by', description: contextMenuMsg.seenBy.filter((u) => u !== currentUser).length > 0 ? contextMenuMsg.seenBy.filter((u) => u !== currentUser).join(', ') : 'Just you so far' }); closeContextMenu() }} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+                    <Eye className="h-4 w-4 text-muted-foreground" /> Seen by
+                  </button>
+                  {contextMenuMsg.username === currentUser && (
+                    <button onClick={() => { onDelete(contextMenuMsg.id); closeContextMenu() }} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#D84241] transition-colors hover:bg-[#D84241]/10">
+                      <Trash2 className="h-4 w-4" /> Delete
                     </button>
                   )}
                 </div>

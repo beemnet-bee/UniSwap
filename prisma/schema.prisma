@@ -28,7 +28,6 @@ model Post {
   updatedAt DateTime @updatedAt
 }
 
-// Contact / partner form submissions
 model AdminMessage {
   id        String   @id @default(cuid())
   name      String
@@ -46,7 +45,6 @@ model AdminMessage {
   updatedAt DateTime @updatedAt
 }
 
-// Admin users
 model AdminUser {
   id        String   @id @default(cuid())
   username  String   @unique
@@ -56,25 +54,28 @@ model AdminUser {
   updatedAt DateTime @updatedAt
 }
 
-// Admin-to-admin global chat
 model AdminChat {
-  id        String    @id @default(cuid())
-  username  String
-  message   String
-  editedAt  DateTime?
-  replyToId String?
-  createdAt DateTime  @default(now())
+  id             String    @id @default(cuid())
+  username       String
+  message        String
+  editedAt       DateTime?
+  replyToId      String?
+  replyToUsername String?
+  replyToMessage String?
+  attachment     String?
+  attachmentName String?
+  attachmentType String?
+  createdAt      DateTime  @default(now())
 
   reactions AdminChatReaction[]
   seenBy    AdminChatSeen[]
 }
 
-// Chat message reactions (custom SVG emoji types)
 model AdminChatReaction {
   id        String   @id @default(cuid())
   chatId    String
   username  String
-  emoji     String   // "like", "love", "laugh", "wow", "sad", "angry"
+  emoji     String
   createdAt DateTime @default(now())
 
   chat      AdminChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
@@ -82,7 +83,6 @@ model AdminChatReaction {
   @@unique([chatId, username, emoji])
 }
 
-// Track which admins have seen each message
 model AdminChatSeen {
   id        String   @id @default(cuid())
   chatId    String
@@ -94,7 +94,12 @@ model AdminChatSeen {
   @@unique([chatId, username])
 }
 
-// Simple page-view counter
+model AdminChatSettings {
+  id              String   @id @default("default")
+  retentionDays   Int      @default(7)
+  updatedAt       DateTime @updatedAt
+}
+
 model PageView {
   id        String   @id @default(cuid())
   path      String
