@@ -807,13 +807,13 @@ function DashboardTab({
 }
 
 /* ------------------------------------------------------------------ */
-/* Views Over Time Chart                                               */
+/* Views Over Time Chart (smooth curve, auto-refresh)                  */
 /* ------------------------------------------------------------------ */
 
 type TimeRange = 'daily' | 'monthly' | 'semi' | 'yearly'
 
 function ViewsOverTimeChart({
-  data,
+  data: initialData,
 }: {
   data: {
     daily: { label: string; count: number }[]
@@ -823,6 +823,28 @@ function ViewsOverTimeChart({
   }
 }) {
   const [range, setRange] = React.useState<TimeRange>('daily')
+  const [liveData, setLiveData] = React.useState(initialData)
+  const [hoverIdx, setHoverIdx] = React.useState<number | null>(null)
+  const [refreshing, setRefreshing] = React.useState(false)
+
+  // Auto-refresh every 10 seconds
+  React.useEffect(() => {
+    const id = setInterval(async () => {
+      try {
+        setRefreshing(true)
+        const res = await fetch('/api/admin/stats', { cache: 'no-store' })
+        if (res.ok) {
+          const d = await res.json()
+          if (d.viewsOverTime) setLiveData(d.viewsOverTime)
+        }
+      } catch {
+        // silently fail
+      } finally {
+        setRefreshing(false)
+      }
+    }, 10000)
+    return () => clearInterval(id)
+  }, [])
 
   const rangeLabels: Record<TimeRange, string> = {
     daily: 'Daily (7 days)',
@@ -831,15 +853,72 @@ function ViewsOverTimeChart({
     yearly: 'Yearly (3 years)',
   }
 
-  const currentData = data[range]
+  const currentData = liveData[range] || []
   const maxCount = Math.max(...currentData.map((d) => d.count), 1)
+  const totalViews = currentData.reduce((sum, d) => sum + d.count, 0)
+
+  // SVG dimensions
+  const W = 600
+  const H = 180
+  const padL = 40
+  const padR = 20
+  const padT = 20
+  const padB = 30
+  const chartW = W - padL - padR
+  const chartH = H - padT - padB
+
+  // Calculate points
+  const points = currentData.map((item, i) => {
+    const x = padL + (currentData.length === 1 ? chartW / 2 : (i / (currentData.length - 1)) * chartW)
+    const y = padT + chartH - (item.count / maxCount) * chartH
+    return { x, y, ...item }
+  })
+
+  // Build smooth curve path using Catmull-Rom to Bezier
+  function buildSmoothPath(pts: { x: number; y: number }[]): string {
+    if (pts.length === 0) return ''
+    if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`
+    if (pts.length === 2) return `M ${pts[0].x} ${pts[0].y} L ${pts[1].x} ${pts[1].y}`
+
+    let path = `M ${pts[0].x} ${pts[0].y}`
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i]
+      const p1 = pts[i]
+      const p2 = pts[i + 1]
+      const p3 = pts[i + 2] || p2
+      const cp1x = p1.x + (p2.x - p0.x) / 6
+      const cp1y = p1.y + (p2.y - p0.y) / 6
+      const cp2x = p2.x - (p3.x - p1.x) / 6
+      const cp2y = p2.y - (p3.y - p1.y) / 6
+      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`
+    }
+    return path
+  }
+
+  const linePath = buildSmoothPath(points)
+  const areaPath = points.length > 0
+    ? `${linePath} L ${points[points.length - 1].x} ${padT + chartH} L ${points[0].x} ${padT + chartH} Z`
+    : ''
+
+  // Y-axis grid lines
+  const gridLines = [0, 0.25, 0.5, 0.75, 1].map((t) => ({
+    y: padT + chartH - t * chartH,
+    value: Math.round(t * maxCount),
+  }))
 
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-primary" />
+          <BarChart3 className={cn('h-4 w-4 text-primary transition-opacity', refreshing && 'animate-pulse')} />
           <h2 className="text-base font-bold tracking-tight">Views Over Time</h2>
+          <span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-600">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            </span>
+            Live
+          </span>
         </div>
         {/* Range selector */}
         <div className="flex gap-1 rounded-xl bg-muted p-1">
@@ -860,50 +939,154 @@ function ViewsOverTimeChart({
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="flex h-48 items-end justify-between gap-2 sm:gap-3">
-        {currentData.map((item, i) => {
-          const heightPct = (item.count / maxCount) * 100
-          return (
-            <div key={i} className="group flex flex-1 flex-col items-center gap-2">
-              {/* Bar */}
-              <div className="relative flex w-full flex-1 items-end justify-center">
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${Math.max(heightPct, 2)}%` }}
-                  transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                  className={cn(
-                    'relative w-full max-w-[2.5rem] rounded-t-lg transition-colors',
-                    range === 'daily'
-                      ? 'bg-gradient-to-t from-primary to-[#67B0C3]'
-                      : range === 'monthly'
-                      ? 'bg-gradient-to-t from-[#2B8FB9] to-[#67B0C3]'
-                      : range === 'semi'
-                      ? 'bg-gradient-to-t from-[#67B0C3] to-[#D84241]'
-                      : 'bg-gradient-to-t from-[#D84241] to-[#67B0C3]'
-                  )}
-                >
-                  {/* Tooltip on hover */}
-                  <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-lg bg-foreground px-2 py-1 text-[10px] font-bold text-background opacity-0 transition-opacity group-hover:opacity-100">
-                    {item.count}
-                  </div>
-                </motion.div>
-              </div>
-              {/* Label */}
-              <span className="text-[10px] font-medium text-muted-foreground">
-                {item.label}
-              </span>
-            </div>
-          )
-        })}
+      {/* SVG Chart */}
+      <div className="relative w-full overflow-hidden">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="w-full"
+          preserveAspectRatio="xMidYMid meet"
+          style={{ minHeight: '200px' }}
+        >
+          <defs>
+            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#2B8FB9" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="#67B0C3" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#D84241" stopOpacity="0.05" />
+            </linearGradient>
+            <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#2B8FB9" />
+              <stop offset="50%" stopColor="#67B0C3" />
+              <stop offset="100%" stopColor="#D84241" />
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* Grid lines */}
+          {gridLines.map((g, i) => (
+            <g key={i}>
+              <line
+                x1={padL}
+                y1={g.y}
+                x2={W - padR}
+                y2={g.y}
+                stroke="currentColor"
+                strokeOpacity="0.08"
+                strokeWidth="1"
+                strokeDasharray="3 3"
+              />
+              <text
+                x={padL - 8}
+                y={g.y + 3}
+                textAnchor="end"
+                className="fill-muted-foreground"
+                fontSize="9"
+              >
+                {g.value}
+              </text>
+            </g>
+          ))}
+
+          {/* Area fill */}
+          {areaPath && (
+            <motion.path
+              d={areaPath}
+              fill="url(#areaGradient)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+            />
+          )}
+
+          {/* Smooth curve line */}
+          {linePath && (
+            <motion.path
+              d={linePath}
+              fill="none"
+              stroke="url(#lineGradient)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#glow)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+            />
+          )}
+
+          {/* Data points */}
+          {points.map((p, i) => (
+            <g key={i}>
+              <motion.circle
+                cx={p.x}
+                cy={p.y}
+                r={hoverIdx === i ? 6 : 4}
+                fill="white"
+                stroke="url(#lineGradient)"
+                strokeWidth="2.5"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.5 + i * 0.08, type: 'spring', stiffness: 300 }}
+                style={{ cursor: 'pointer', transformOrigin: `${p.x}px ${p.y}px` }}
+                onMouseEnter={() => setHoverIdx(i)}
+                onMouseLeave={() => setHoverIdx(null)}
+              />
+              {/* Hover tooltip */}
+              {hoverIdx === i && (
+                <g>
+                  <rect
+                    x={p.x - 22}
+                    y={p.y - 28}
+                    width="44"
+                    height="18"
+                    rx="6"
+                    fill="currentColor"
+                    className="text-foreground"
+                  />
+                  <text
+                    x={p.x}
+                    y={p.y - 16}
+                    textAnchor="middle"
+                    className="fill-background"
+                    fontSize="10"
+                    fontWeight="bold"
+                  >
+                    {p.count}
+                  </text>
+                </g>
+              )}
+              {/* X-axis labels */}
+              <text
+                x={p.x}
+                y={H - 8}
+                textAnchor="middle"
+                className="fill-muted-foreground"
+                fontSize="9"
+              >
+                {p.label}
+              </text>
+            </g>
+          ))}
+        </svg>
+
+        {/* Empty state overlay */}
+        {totalViews === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-sm text-muted-foreground">Waiting for views to come in...</p>
+          </div>
+        )}
       </div>
 
-      {/* Summary line */}
-      <div className="mt-4 border-t border-border pt-3 text-center">
+      {/* Summary */}
+      <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
         <span className="text-xs text-muted-foreground">{rangeLabels[range]}</span>
-        <span className="mx-2 text-muted-foreground/30">|</span>
         <span className="text-xs font-semibold text-foreground">
-          Total: {currentData.reduce((sum, d) => sum + d.count, 0)} views
+          {totalViews} views total
         </span>
       </div>
     </div>
