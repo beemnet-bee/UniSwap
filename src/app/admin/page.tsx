@@ -167,7 +167,10 @@ export default function AdminPage() {
     if (!authed) return
     const id = setInterval(() => {
       fetch('/api/admin/stats', { cache: 'no-store' })
-        .then((r) => r.json())
+        .then((r) => {
+          if (r.ok) return r.json()
+          throw new Error('Failed to fetch stats')
+        })
         .then((data: Stats) => setStats(data))
         .catch(() => {})
     }, 30000)
@@ -820,7 +823,7 @@ function DashboardTab({
               <s.icon className="h-5 w-5" strokeWidth={1.75} />
             </div>
             <p className="relative text-3xl font-bold tracking-tight">
-              {s.value.toLocaleString()}
+              {s.value?.toLocaleString() ?? '0'}
             </p>
             <p className="relative mt-0.5 text-sm font-medium">{s.label}</p>
             <p className="relative text-xs text-muted-foreground">{s.sub}</p>
