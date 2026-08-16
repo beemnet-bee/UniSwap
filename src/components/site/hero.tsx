@@ -56,23 +56,6 @@ export function Hero() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
         {/* Left column, copy */}
         <div className="lg:col-span-6 xl:col-span-6">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Badge
-              variant="secondary"
-              className="mb-5 gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#D84241] opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#D84241]" />
-              </span>
-              Piloting now on select campuses
-            </Badge>
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
